@@ -8,15 +8,6 @@ conexion = psycopg2.connect(cadConexon)
 cursor = conexion.cursor()
 
 #Conexion con MySQL
-# mydb = mysql.connector.connect(
-#     host="localhost",
-#     database="sucursal",
-#     user="root",
-#     passwd="Dvp-sr370",
-#     port=3306
-# )
-#
-# mycursor = mydb.cursor()
 
 def getSucursal(numDB):
     mydb = mysql.connector.connect(
@@ -29,4 +20,5 @@ def getSucursal(numDB):
 
     mycursor = mydb.cursor()
     return mydb, mycursor
+
 
