@@ -21,4 +21,3 @@ def getSucursal(numDB):
     mycursor = mydb.cursor()
     return mydb, mycursor
 
-

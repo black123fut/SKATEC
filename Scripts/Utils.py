@@ -19,7 +19,13 @@ def getLargoTablaPG(nombre):
     return largo
 
 
-def getLargoTablaMySQL(nombre):
+def getIdProductoPG(nombre, categoria):
+    sqlInsertar = "SELECT IdProducto FROM Producto WHERE Nombre=%s AND CategoriaActivo=%s"
+    cursor.execute(sqlInsertar, (nombre, categoria))
+    return cursor.fetchall()
+
+
+def getLargoTablaMySQL(nombre, mycursor):
     sqlInsertar = "SELECT Id" + nombre + " FROM " + nombre
     mycursor.execute(sqlInsertar)
     largo = len(mycursor.fetchall())
