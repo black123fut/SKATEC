@@ -110,10 +110,6 @@ CREATE TABLE IF NOT EXISTS EmpleadoMes (
 /*
         Envios a sucursal
  */
-CREATE TABLE IF NOT EXISTS ArticulosEnvio (
-    IdEnvio SERIAL PRIMARY KEY,
-    FechaEnvio DATE NOT NULL
-);
 
 /*
         Mercaderia
@@ -141,6 +137,7 @@ CREATE TABLE IF NOT EXISTS Producto (
 CREATE TABLE IF NOT EXISTS SolicitudPedido (
     IdSolicitudPedido SERIAL PRIMARY KEY,
     IdProveedor INTEGER NOT NULL,
+    FechaSolicitud DATE NOT NULL,
     FOREIGN KEY (IdProveedor) REFERENCES Proveedor(IdProveedor)
 );
 
@@ -157,11 +154,9 @@ CREATE TABLE IF NOT EXISTS Articulo (
     IdArticulo SERIAL PRIMARY KEY,
     IdProducto INTEGER NOT NULL,
     IdSucursal INTEGER NOT NULL,
-    IdEnvio INTEGER,
     CodigoArticulo TEXT UNIQUE NOT NULL,
-    Estado TEXT NOT NULL, --Embodegado, Disponible, Vendido-Garantia-Activa, Vendido-Garantia-Inactiva
+    Estado TEXT NOT NULL, --Embodegado, EnCamino, Disponible, Vendido-Garantia-Activa, Vendido-Garantia-Inactiva
     FechaRegistro DATE NOT NULL,
-    FOREIGN KEY (IdEnvio) REFERENCES ArticulosEnvio(IdEnvio),
     FOREIGN KEY (IdProducto) REFERENCES Producto(IdProducto),
     FOREIGN KEY (IdSucursal) REFERENCES Sucursal(IdSucursal)
 );
