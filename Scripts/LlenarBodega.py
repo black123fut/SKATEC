@@ -14,6 +14,7 @@ def crearCodigoProductoRandom():
 def GenerarCodigoArt(idProducto):
     return codigoArticulo[idProducto] + crearCodigoProductoRandom()
 
+
 def insertarEnDB(rango, idPed, fecha, idArt, offset):
     for n in range(rango):
         idProd = n + offset

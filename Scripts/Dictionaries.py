@@ -28,8 +28,8 @@ insertar = {
     "SolicitudPedido": "INSERT INTO  SolicitudPedido(IdSolicitudPedido,IdProveedor,FechaSolicitud) VALUES ",
     "PedidoRecibido": "INSERT INTO  PedidoRecibido(IdPedidoRecibido,IdSolicitudPedido,IdProveedor,FechaRecibido) VALUES"
                       " ",
-    "Envio": "INSERT INTO Envio (FechaEnvio, IdSucursal) VALUES ",
-    "ListaEnvio": "INSERT INTO ListaEnvio (IdArticulo, IdEnvio) VALUES "
+    "Envio": "INSERT INTO Envio (FechaEnvio,IdSucursal) VALUES ",
+    "ListaEnvio": "INSERT INTO ListaEnvio (IdArticulo,IdEnvio) VALUES "
 }
 
 insertarMySQL = {
@@ -38,5 +38,6 @@ insertarMySQL = {
     "PedidoRecibido": "INSERT INTO  PedidoRecibido(IdSolicitudPedido,FechaRecibido) VALUES ",
     "SolicitudPedido": "INSERT INTO  SolicitudPedido(FechaSolicitud) VALUES ",
     "ListaRecibido": insertar["ListaRecibido"],
-    "ListaSolicitud": insertar["ListaSolicitud"]
+    "ListaSolicitud": insertar["ListaSolicitud"],
+    "Promocion": "INSERT INTO Promocion(CodigoProducto,CodigoSucursal,FechaHoraInicio,FechaHoraFin,Descuento,IdProducto) VALUES "
 }

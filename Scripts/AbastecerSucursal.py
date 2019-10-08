@@ -1,6 +1,4 @@
-from Dictionaries import *
 from Utils import *
-import time
 
 
 def enviarAlTransporte(idSucursal, fecha, idProd, cantidad, mycursor):
@@ -12,7 +10,7 @@ def enviarAlTransporte(idSucursal, fecha, idProd, cantidad, mycursor):
     numenvio = getLargoTablaMySQL("Envio", mycursor)
     for i in range(20):
         rand, prod = (random.randint(1, 5), i + 1) if idProd == 0 else (cantidad, idProd)
-        cursor.callproc("AgregarListaEnvio", (idSucursal, numenvio, rand, prod))
+        cursor.callproc("AgregarListaEnvio", (numenvio, idSucursal, rand, prod))
         conexion.commit()
         totalLista += [rand]
 
@@ -38,7 +36,7 @@ def recibirEnSucursal(fecha, listaCantidades, sucursal, mydb, mycursor, idProd):
     direccion = cursor.fetchall()
 
     for i in range(20):
-        cont = str(i + 1) if idProd == 0 else idProd
+        cont = str(i + 1) if idProd == 0 else str(idProd)
         myInsert = insertarMySQL["ListaSolicitud"] + "(" + cont + ", " + str(ultimaSolicitud) + ", " + \
                    listaCantidades[i] + ")"
         mycursor.execute(myInsert)
@@ -63,6 +61,7 @@ def recibirEnSucursal(fecha, listaCantidades, sucursal, mydb, mycursor, idProd):
     # Cambia el estado de los articulos en bodega a disponibles
     cursor.callproc("ColocadosEnSucursal", ())
 
+
 # Llena todas las sucursales con un poco de todos los productos
 def llenarSucursales():
     for n in range(3):
@@ -73,6 +72,7 @@ def llenarSucursales():
         solicitarMercaderia(fecha, mydb, mycursor)
         totalLista = enviarAlTransporte(numSucursal, fecha, 0, 0, mycursor)
         recibirEnSucursal(fecha, totalLista, numSucursal, mydb, mycursor, 0)
+
 
 # Llena una sucursal espeifica con un producto y cantidad especifica
 def pedirProductosBodega(nombreProd, categoria, idSucursal, cantidad):
