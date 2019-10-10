@@ -1,6 +1,6 @@
 from Utils import *
 
-
+#Crea la factura que funciona como el encabezado de la lista de articulos en la compra efectuada
 def CrearFactura(idCliente, idEmpleado,idSucursal,fecha,mydb, mycursor):
     sentenciaPSQL = insertar["Factura"] + "(%s,%s,\""+fecha+"\",0,\""+fecha+"\")"
     cursor.execute(sentenciaPSQL,(str(idSucursal),str(idCliente)))
@@ -16,21 +16,29 @@ def CrearFactura(idCliente, idEmpleado,idSucursal,fecha,mydb, mycursor):
 
     return idFactura
 
+#Añade el monto total de la compra efectuada, los puntos ganados por el cliente y suma una venta al empleado que la realizo
 def ActualizarFactura(idFactura, monto, puntosGanados, idCliente, idEmpleado, mydb, mycursor):
+    cursor.callproc("ActualizarFactura", (int(idFactura), float(monto),int(puntosGanados),int(idCliente),int(idEmpleado)))
+    conexion.commit()
+
     mycursor.callproc("ActualizarFactura", (int(idFactura), float(monto),int(puntosGanados),int(idCliente),int(idEmpleado)))
     mydb.commit()
-    # Falta crear el store procedure ActualizarFactura en PostgreSQL
 
-
+#Añade un articulo a la lista de articulos de la compra que se efectua
 def Venta(idArticulo, idFactura, precio, mydb, mycursor):
     # sentenciaPSQL = insertar["Venta"] + "(%s , %s, %s)"
     # cursor.execute(sentenciaPSQL,(str(idFactura),str(idArticulo),str(precio)))
     # conexion.commit()
+    cursor.callproc("Venta",(int(idFactura), int(idArticulo), float(precio)))
+    conexion.commit()
+
     mycursor.callproc("Venta", (int(idFactura), int(idArticulo), float(precio)))
     mydb.commit()
-    # Falta crear el store procedure Venta en PostgreSQL
 
+#def EfectuarUnaCompra(idCliente,idEmpleado,idSucursal,articulos):
+#    mydb, mycursor = getSucursal(idSucursal)
 
+#Genera valores semi-aleatorios para el numero de compras que se quiere registrar
 def GenerarCompras(numCompras):
     for i in range(3):
         idSucursal= i+1
@@ -41,9 +49,9 @@ def GenerarCompras(numCompras):
             cantidadClientes = len(cursor.fetchall())
             idCliente = random.randint(1,int(cantidadClientes))
 
-            sentenciaPSQL = "SELECT IdEmpleado FROM Empleado"
-            cursor.execute(sentenciaPSQL)
-            cantidadEmpleados = len(cursor.fetchall())
+            sentenciaMSQL = "SELECT IdEmpleado FROM Empleado WHERE Puesto = \"Vendedor\""
+            mycursor.execute(sentenciaMSQL)
+            cantidadEmpleados = len(mycursor.fetchall())
             idEmpleado = random.randint(1, int(cantidadEmpleados))
 
             fecha = GenerarFecha()
