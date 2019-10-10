@@ -29,7 +29,9 @@ insertar = {
     "PedidoRecibido": "INSERT INTO  PedidoRecibido(IdPedidoRecibido,IdSolicitudPedido,IdProveedor,FechaRecibido) VALUES"
                       " ",
     "Envio": "INSERT INTO Envio (FechaEnvio,IdSucursal) VALUES ",
-    "ListaEnvio": "INSERT INTO ListaEnvio (IdArticulo,IdEnvio) VALUES "
+    "ListaEnvio": "INSERT INTO ListaEnvio (IdArticulo,IdEnvio) VALUES ",
+    "Factura": "INSERT INTO Factura (IdFactura,IdSucursal,IdCliente,FechaCompra,MontoTotal,FechaVenceGarantia) VALUES ",
+    "Venta": "INSERT INTO Venta(IdFactura,IdArticulo,Precio) VALUES "
 }
 
 insertarMySQL = {
@@ -39,5 +41,6 @@ insertarMySQL = {
     "SolicitudPedido": "INSERT INTO  SolicitudPedido(FechaSolicitud) VALUES ",
     "ListaRecibido": insertar["ListaRecibido"],
     "ListaSolicitud": insertar["ListaSolicitud"],
-    "Promocion": "INSERT INTO Promocion(CodigoProducto,CodigoSucursal,FechaHoraInicio,FechaHoraFin,Descuento,IdProducto) VALUES "
+    "Promocion": "INSERT INTO Promocion(CodigoProducto,CodigoSucursal,FechaHoraInicio,FechaHoraFin,Descuento,IdProducto) VALUES ",
+    "Factura": "INSERT INTO Factura (IdFactura,IdEmpleado,IdCliente,FechaCompra,PuntosObtenidos,MontoTotal,FechaVenceGarantia) VALUES "
 }

@@ -113,3 +113,18 @@ def GenerarDireccion():
         direccion += "el museo"
 
     return direccion
+
+
+def CalcularPuntos(monto):
+    if monto > 100000:
+        return 60
+    elif monto > 75000:
+        return 30
+    elif monto > 50000:
+        return 15
+    elif monto > 30000:
+        return 9
+    elif monto > 10000:
+        return 3
+    else:
+        return 0
