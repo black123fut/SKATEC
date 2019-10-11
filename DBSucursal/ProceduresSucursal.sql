@@ -26,3 +26,12 @@ BEGIN
     WHERE Empleado.IdEmpleado = idEmp;
 END //
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE AumentarSalario (IN IdMejorEmpleado INT)
+BEGIN
+    UPDATE Empleado
+    SET Salario = Salario + 20000
+    WHERE IdEmpleado = IdMejorEmpleado;
+END //
+DELIMITER ;

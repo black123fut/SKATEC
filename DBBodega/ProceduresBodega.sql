@@ -71,3 +71,12 @@ BEGIN
     RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION AumentarSalario (IN IdMejorEmpleado INT)
+RETURNS INT AS $$
+BEGIN
+    UPDATE Vendedor
+    SET Salario = Salario + 20000
+    WHERE IdEmpleado = IdMejorEmpleado;
+END;
+$$ LANGUAGE plpgsql

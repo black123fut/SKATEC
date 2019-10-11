@@ -59,6 +59,10 @@ def GenerarFecha():
     return fecha.strftime('%Y-%m-%d')
 
 
+def GetFecha(anio, mes, dia):
+    return datetime.datetime(anio, mes, dia).strftime('%Y-%m-%d')
+
+
 def GenerarPromocion(idSucursal, idProducto):
     mycursor, mydb = getSucursal(idSucursal)
     prodRandom = random.randint(1, 20) if idProducto == 0 else idProducto
