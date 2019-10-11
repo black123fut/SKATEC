@@ -35,8 +35,33 @@ def Venta(idArticulo, idFactura, precio, mydb, mycursor):
     mycursor.callproc("Venta", (int(idFactura), int(idArticulo), float(precio)))
     mydb.commit()
 
-#def EfectuarUnaCompra(idCliente,idEmpleado,idSucursal,articulos):
-#    mydb, mycursor = getSucursal(idSucursal)
+#Genera una compra con los datos que se desean
+def EfectuarUnaCompra(idCliente,idEmpleado,idSucursal,articulos):
+    mydb, mycursor = getSucursal(idSucursal)
+
+    fecha = GenerarFecha()
+
+    idFactura = CrearFactura(idCliente, idEmpleado, idSucursal, fecha, mydb, mycursor)
+
+    monto = 0.0
+
+    for idArt in range(articulos):
+        sentenciaMSQL = "SELECT IdProducto FROM Articulo WHERE Articulo.IdArticulo = %s"
+        mycursor.execute(sentenciaMSQL, (str(idArt),))
+        resultados = mycursor.fetchall()
+
+        idProd = int(resultados[0][0])
+
+        sentenciaMSQL = "SELECT Precio FROM Producto WHERE Producto.IdProducto = %s"
+        mycursor.execute(sentenciaMSQL, (str(idProd),))
+        resultados = mycursor.fetchone()
+        precio = resultados[0]
+
+        Venta(idArt, idFactura, precio)
+        monto += precio
+
+    puntosGanados = CalcularPuntos(monto)
+    ActualizarFactura(idFactura, monto, puntosGanados, idCliente, idEmpleado, mydb, mycursor)
 
 #Genera valores semi-aleatorios para el numero de compras que se quiere registrar
 def GenerarCompras(numCompras):
