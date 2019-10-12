@@ -59,6 +59,15 @@ def GenerarFecha():
     fecha = datetime.datetime(anio, mes, dia)
     return fecha.strftime('%Y-%m-%d')
 
+def GenerarFechaGarantia():
+    anioIn = random.randint(2014, 2019)
+    anioFin = anioIn+1
+    mes = random.randint(1, 12)
+    dia = random.randint(1, 30)
+    fechaFin = datetime.datetime(anioFin, mes, dia)
+    fechaIn = datetime.datetime(anioIn, mes, dia)
+    return fechaIn.strftime('%Y-%m-%d'), fechaFin.strftime('%Y-%m-%d')
+
 
 def GenerarFechaNac():
     anio = random.randint(1950, 2005)

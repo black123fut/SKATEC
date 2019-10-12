@@ -1,36 +1,30 @@
 from Utils import *
 
 #Crea la factura que funciona como el encabezado de la lista de articulos en la compra efectuada
-def CrearFactura(idCliente, idEmpleado,idSucursal,fecha,mydb, mycursor):
-    sentenciaPSQL = insertar["Factura"] + "(%s,%s,\""+fecha+"\",0,\""+fecha+"\")"
-    cursor.execute(sentenciaPSQL,(str(idSucursal),str(idCliente)))
-    conexion.commit()
+def CrearFactura(idCliente, idEmpleado,fecha,fechaVence,metoPago,mydb, mycursor):
 
-    sentenciaPSQL = "SELECT IdFactura FROM Fractura"
-    cursor.execute(sentenciaPSQL)
-    idFactura = len(cursor.fetchall())
-
-    sentenciaMSQL = insertarMySQL["Factura"] + "(%s,%s,%s,\""+fecha+"\",0,0,\""+fecha+"\")"
-    mycursor.execute(sentenciaMSQL,(str(idFactura),str(idEmpleado),str(idCliente)))
+    sentenciaMSQL = insertarMySQL["Factura"] + "(%s,%s,%s,0,0,%s,%s)"
+    mycursor.execute(sentenciaMSQL,(str(idEmpleado),str(idCliente),str(fecha),str(fechaVence),str(metoPago)))
     mydb.commit()
+
+    sentenciaMSQL = "SELECT IdFactura FROM Fractura"
+    mycursor.execute(sentenciaMSQL)
+    idFactura = len(mycursor.fetchall())
 
     return idFactura
 
 #Añade el monto total de la compra efectuada, los puntos ganados por el cliente y suma una venta al empleado que la realizo
 def ActualizarFactura(idFactura, monto, puntosGanados, idCliente, idEmpleado, mydb, mycursor):
-    cursor.callproc("ActualizarFactura", (int(idFactura), float(monto),int(puntosGanados),int(idCliente),int(idEmpleado)))
-    conexion.commit()
+    #cursor.callproc("ActualizarFactura", (int(idFactura), float(monto),int(puntosGanados),int(idCliente),int(idEmpleado)))
+    #conexion.commit()
 
     mycursor.callproc("ActualizarFactura", (int(idFactura), float(monto),int(puntosGanados),int(idCliente),int(idEmpleado)))
     mydb.commit()
 
 #Añade un articulo a la lista de articulos de la compra que se efectua
 def Venta(idArticulo, idFactura, precio, mydb, mycursor):
-    # sentenciaPSQL = insertar["Venta"] + "(%s , %s, %s)"
-    # cursor.execute(sentenciaPSQL,(str(idFactura),str(idArticulo),str(precio)))
-    # conexion.commit()
-    cursor.callproc("Venta",(int(idFactura), int(idArticulo), float(precio)))
-    conexion.commit()
+    #cursor.callproc("Venta",(int(idFactura), int(idArticulo), float(precio)))
+    #conexion.commit()
 
     mycursor.callproc("Venta", (int(idFactura), int(idArticulo), float(precio)))
     mydb.commit()
@@ -39,9 +33,11 @@ def Venta(idArticulo, idFactura, precio, mydb, mycursor):
 def EfectuarUnaCompra(idCliente,idEmpleado,idSucursal,articulos):
     mydb, mycursor = getSucursal(idSucursal)
 
-    fecha = GenerarFecha()
+    fechaIn, fechaFin = GenerarFechaGarantia()
 
-    idFactura = CrearFactura(idCliente, idEmpleado, idSucursal, fecha, mydb, mycursor)
+    metodoPag = metodoPago()
+
+    idFactura = CrearFactura(idCliente, idEmpleado, fechaIn, fechaFin, metodoPag, mydb, mycursor)
 
     monto = 0.0
 
@@ -69,19 +65,21 @@ def GenerarCompras(numCompras):
         idSucursal= i+1
         mydb, mycursor = getSucursal(idSucursal)
         for n in range(numCompras):
-            sentenciaPSQL = "SELECT IdCliente FROM Cliente"
-            cursor.execute(sentenciaPSQL)
+            sentenciaMSQL = "SELECT IdCliente FROM Cliente"
+            mycursor.execute(sentenciaMSQL)
             cantidadClientes = len(cursor.fetchall())
-            idCliente = random.randint(1,int(cantidadClientes))
+            idCliente = random.randint(1,cantidadClientes)
 
             sentenciaMSQL = "SELECT IdEmpleado FROM Empleado WHERE Puesto = \"Vendedor\""
             mycursor.execute(sentenciaMSQL)
             cantidadEmpleados = len(mycursor.fetchall())
-            idEmpleado = random.randint(1, int(cantidadEmpleados))
+            idEmpleado = random.randint(1, cantidadEmpleados)
 
-            fecha = GenerarFecha()
+            fechaIn,fechaFin = GenerarFechaGarantia()
 
-            idFactura = CrearFactura(idCliente,idEmpleado,idSucursal,fecha,mydb,mycursor)
+            metodoPag = metodoPago()
+
+            idFactura = CrearFactura(idCliente,idEmpleado,fechaIn,fechaFin,metodoPag,mydb, mycursor)
 
             monto = 0.0
 
@@ -108,3 +106,10 @@ def GenerarCompras(numCompras):
             puntosGanados = CalcularPuntos(monto)
 
             ActualizarFactura(idFactura, monto, puntosGanados, idCliente, idEmpleado, mydb, mycursor)
+
+def metodoPago():
+    num = random.randint(1,2)
+    if num == 1:
+        return "Efectivo"
+    else:
+        return "Tarjeta"
