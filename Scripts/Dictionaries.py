@@ -30,10 +30,10 @@ insertar = {
     "Envio": "INSERT INTO Envio (FechaEnvio,IdSucursal) VALUES ",
     "ListaEnvio": "INSERT INTO ListaEnvio (IdArticulo,IdEnvio) VALUES ",
     "Factura": "INSERT INTO Factura (IdFactura,IdSucursal,IdCliente,FechaCompra,MontoTotal,FechaVenceGarantia) VALUES ",
-    "EmpleadoMes": "INSERT INTO EmpleadoMes(IdVendedor, FechaEmpleadoMes) VALUES ",
+    "EmpleadoMes": "INSERT INTO EmpleadoMes(IdEmpleado, FechaEmpleadoMes) VALUES ",
     "Venta": "INSERT INTO Venta(IdFactura,IdArticulo,Precio) VALUES ",
     "Usuario": "INSERT INTO  Usuario(Cedula,Nombre,Apellido,FechaHoraRegistro,Telefono,Email,DetalleDireccion,IdCanton) VALUES ",
-    "Cliente": "INSERT INTO Cliente(IdCliente,Cedula,) VALUES",
+    "Cliente": "INSERT INTO Cliente(IdCliente,Cedula) VALUES",
     "Vendedor": "INSERT INTO Vendedor(IdEmpleado,IdSucursal,NumVentas) VALUES "
 }
 
