@@ -80,3 +80,27 @@ BEGIN
     WHERE IdEmpleado = IdMejorEmpleado;
 END;
 $$ LANGUAGE plpgsql
+
+CREATE OR REPLACE FUNCTION RegistrarCliente(ced INT, fechaIn DATE, fechaExp DATE)
+RETURNS TABLE(IdCliente INT) AS $$
+BEGIN
+    INSERT INTO Cliente(Cedula,Puntos,FechaInicio,FechaExpiracion)
+    VALUES (ced, 0, fechaIn, fechaExp);
+
+    RETURN QUERY
+    SELECT C.IdCliente FROM Cliente C
+    WHERE C.Cedula = ced;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION RegistrarEmpleado(ced INT, codigo VARCHAR(30), fechaIn DATE, puest VARCHAR(30), salar FLOAT)
+RETURNS TABLE(IdEmpleado INT) AS $$
+BEGIN
+    INSERT INTO Empleado(Cedula,CodigoEmpleado,Estado,FechaIngreso,NumVentas,Puesto,Salario)
+    VALUES (ced, codigo, 'Activo', fechaIn, 0, puest, salar);
+
+    RETURN QUERY
+    SELECT E.IdEmpleado FROM Empleado E
+    WHERE E.Cedula = ced;
+END;
+$$ LANGUAGE plpgsql;

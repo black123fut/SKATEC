@@ -58,6 +58,12 @@ def GenerarFecha():
     fecha = datetime.datetime(anio, mes, dia)
     return fecha.strftime('%Y-%m-%d')
 
+def GenerarFechaHora():
+    fecha = GenerarFecha()
+    hora = str(random.randint(0, 23))+":"+str(random.randint(0,5))+str(random.randint(0, 9))+":"+str(random.randint(0,5))\
+           +str(random.randint(0, 9))
+    fechaHora = str(fecha)+" "+hora
+    return fechaHora, fecha
 
 def GetFecha(anio, mes, dia):
     return datetime.datetime(anio, mes, dia).strftime('%Y-%m-%d')
@@ -132,3 +138,44 @@ def CalcularPuntos(monto):
         return 3
     else:
         return 0
+
+def GenerarCedula():
+    cedula = str(random.randint(1, 7))
+    for i in range(8):
+        cedula = cedula + str(random.randint(0, 9))
+    cedula = int(cedula)
+    return cedula
+
+def GenerarNombre():
+    ind = random.randint(0, 79)
+    return nombres[ind]
+
+def GenerarApellido():
+    ind = random.randint(0,99)
+    return apellidos[ind]
+
+def GenerarTel():
+    telefono = str(random.randint(2, 9))
+    for i in range(7):
+        telefono = telefono + str(random.randint(0, 9))
+    return telefono
+
+
+def GenerarEmail(nombre):
+    num = random.randint(1,5)
+    if num == 1:
+        return nombre + "@gmail.com"
+    elif num == 2:
+        return nombre + "@hotmail.com"
+    elif num == 3:
+        return nombre + "@outlook.com"
+    elif num == 4:
+        return nombre + "@yahoo.com"
+    else:
+        return nombre + "@livemail.com"
+
+def getUsuarioPG(cedula):
+    sentenciaPSQL = "SELECT * FROM Usuario WHERE Cedula = %s"
+    cursor.execute(sentenciaPSQL, (str(cedula),))
+    usuario = cursor.fetchone()
+    return usuario
