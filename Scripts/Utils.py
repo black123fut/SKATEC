@@ -1,6 +1,7 @@
 import random
 import datetime
 import time
+import urllib.request, json
 from Dictionaries import *
 from Connections import *
 
@@ -58,12 +59,6 @@ def GenerarFecha():
     fecha = datetime.datetime(anio, mes, dia)
     return fecha.strftime('%Y-%m-%d')
 
-def GenerarFechaHora():
-    fecha = GenerarFecha()
-    hora = str(random.randint(0, 23))+":"+str(random.randint(0,5))+str(random.randint(0, 9))+":"+str(random.randint(0,5))\
-           +str(random.randint(0, 9))
-    fechaHora = str(fecha)+" "+hora
-    return fechaHora, fecha
 
 def GetFecha(anio, mes, dia):
     return datetime.datetime(anio, mes, dia).strftime('%Y-%m-%d')
@@ -125,6 +120,16 @@ def GenerarDireccion():
     return direccion
 
 
+def obtenerNombre(cedula):
+    with urllib.request.urlopen("https://apis.gometa.org/cedulas/" + str(cedula) + "&key=KtivgvSWRiAWCZK") as url:
+        data = json.loads(url.read().decode())
+        if data['resultcount'] == 0:
+            return 'ID not found'
+        nombre = data["results"][0]["firstname1"]
+        apellidos =  data["results"][0]["lastname"]
+        return nombre, apellidos
+
+
 def CalcularPuntos(monto):
     if monto > 100000:
         return 60
@@ -139,6 +144,7 @@ def CalcularPuntos(monto):
     else:
         return 0
 
+
 def GenerarCedula():
     cedula = str(random.randint(1, 7))
     for i in range(8):
@@ -146,14 +152,17 @@ def GenerarCedula():
     cedula = int(cedula)
     return cedula
 
+	
 def GenerarNombre():
     ind = random.randint(0, 79)
     return nombres[ind]
 
+	
 def GenerarApellido():
     ind = random.randint(0,99)
     return apellidos[ind]
 
+	
 def GenerarTel():
     telefono = str(random.randint(2, 9))
     for i in range(7):
@@ -174,6 +183,7 @@ def GenerarEmail(nombre):
     else:
         return nombre + "@livemail.com"
 
+		
 def getUsuarioPG(cedula):
     sentenciaPSQL = "SELECT * FROM Usuario WHERE Cedula = %s"
     cursor.execute(sentenciaPSQL, (str(cedula),))
