@@ -32,7 +32,7 @@ insertar = {
     "Factura": "INSERT INTO Factura (IdFactura,IdSucursal,IdCliente,FechaCompra,MontoTotal,FechaVenceGarantia) VALUES ",
     "EmpleadoMes": "INSERT INTO EmpleadoMes(IdEmpleado, FechaEmpleadoMes) VALUES ",
     "Venta": "INSERT INTO Venta(IdFactura,IdArticulo,Precio) VALUES ",
-    "Usuario": "INSERT INTO  Usuario(Cedula,Nombre,Apellido,FechaHoraRegistro,Telefono,Email,DetalleDireccion,IdCanton) VALUES ",
+    "Usuario": "INSERT INTO  Usuario(Cedula,Nombre,Apellido,FechaHoraRegistro,Telefono,Email,DetalleDireccion,FechaNacimiento,IdCanton) VALUES ",
     "Cliente": "INSERT INTO Cliente(IdCliente,Cedula) VALUES",
     "Vendedor": "INSERT INTO Vendedor(IdEmpleado,IdSucursal,NumVentas) VALUES "
 }

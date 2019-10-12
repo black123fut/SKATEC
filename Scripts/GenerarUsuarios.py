@@ -5,15 +5,16 @@ def GenerarUsuario():
     nombre = GenerarNombre()
     apellido = GenerarApellido()
     nombreCompleto = nombre + apellido
-    fechaHoraReg, fecha = GenerarFechaHora()
+    fecha = GenerarFecha()
+    fechaNac = GenerarFechaNac()
     telefono = GenerarTel()
     email = GenerarEmail(nombreCompleto)
     direccion = GenerarDireccion()
     canton = random.randint(1, 82)
 
-    sentenciaPSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s)"
+    sentenciaPSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     try:
-        cursor.execute(sentenciaPSQL, (str(cedula),str(nombre),str(apellido),str(fecha),str(telefono),str(email),str(direccion), str(canton)))
+        cursor.execute(sentenciaPSQL, (str(cedula),str(nombre),str(apellido),str(fecha),str(telefono),str(email),str(direccion),str(fechaNac), str(canton)))
         conexion.commit()
         return cedula, fecha
     except EnvironmentError:
@@ -87,6 +88,7 @@ def GenerarCodigoEmpleado(idSuc):
 
 
 #def CrearCliente():
+
 
 
 #def CrearEmpleado():

@@ -60,6 +60,14 @@ def GenerarFecha():
     return fecha.strftime('%Y-%m-%d')
 
 
+def GenerarFechaNac():
+    anio = random.randint(1950, 2005)
+    mes = random.randint(1, 12)
+    dia = random.randint(1, 30)
+    fecha = datetime.datetime(anio, mes, dia)
+    return fecha.strftime('%Y-%m-%d')
+
+
 def GetFecha(anio, mes, dia):
     return datetime.datetime(anio, mes, dia).strftime('%Y-%m-%d')
 
