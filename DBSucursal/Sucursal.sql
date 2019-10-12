@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS Usuario(
     Telefono TEXT,
     Email TEXT,
     DetalleDireccion TEXT,
+    FechaNacimento DATE,
     IdCanton INTEGER,
     FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton)
 );
@@ -102,6 +103,7 @@ CREATE TABLE IF NOT EXISTS Factura(
     PuntosObtenidos INTEGER,
     MontoTotal FLOAT,
     FechaVenceGarantia DATE,
+    MetodoPago TEXT,
     FOREIGN KEY (IdEmpleado) REFERENCES Empleado(IdEmpleado),
     FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente)
 );
