@@ -35,3 +35,24 @@ BEGIN
     WHERE IdEmpleado = IdMejorEmpleado;
 END //
 DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE ObtenerEmpleadoMes (IN Dateanterior DATE, IN Dateactual DATE)
+BEGIN
+    SELECT *, COUNT(E.IdEmpleado) AS Ventas FROM Empleado E
+    INNER JOIN Factura F ON F.IdEmpleado = E.IdEmpleado
+    WHERE F.FechaCompra BETWEEN Dateanterior AND Dateactual
+    GROUP BY E.IdEmpleado
+    ORDER BY Ventas DESC
+    LIMIT 1;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE AumentarSalario (IN IdMejorEmpleado INT)
+BEGIN
+    UPDATE Empleado
+    SET Salario = Salario + 20000
+    WHERE IdEmpleado = IdMejorEmpleado;
+END //
+DELIMITER ;

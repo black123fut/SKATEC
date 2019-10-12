@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS Canton (
     Nombre TEXT NOT NULL,
     FOREIGN KEY (IdProvincia) REFERENCES Provincia (IdProvincia)
 );
-
 /*
         Persona - Cliente
  */
@@ -27,12 +26,16 @@ CREATE TABLE IF NOT EXISTS Usuario (
     Cedula INTEGER UNIQUE NOT NULL,
     Nombre TEXT NOT NULL,
     Apellido TEXT NOT NULL,
+    FechaRegistro DATE NOT NULL,
     Telefono TEXT,
     Email TEXT,
-    IdCanton INTEGER NOT NULL,
     DetalleDireccion TEXT,
+    FechaNacimiento DATE NOT NULL,
+    IdCanton INTEGER NOT NULL,
     FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton)
 );
+
+
 
 CREATE TABLE IF NOT EXISTS Cliente (
     IdCliente SERIAL PRIMARY KEY,
@@ -196,9 +199,11 @@ CREATE TABLE IF NOT EXISTS Factura (
     FechaCompra TIMESTAMP NOT NULL,
     FechaVenceGarantia DATE,
     MontoTotal FLOAT,
+    MetodoPago TEXT NOT NULL,
     FOREIGN KEY (IdSucursal) REFERENCES Sucursal(IdSucursal),
     FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente)
 );
+
 
 CREATE TABLE IF NOT EXISTS Venta (
     IdFactura INTEGER NOT NULL,
