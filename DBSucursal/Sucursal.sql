@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Usuario(
 	Cedula INTEGER NOT NULL UNIQUE PRIMARY KEY,
     Nombre TEXT NOT NULL,
     Apellido TEXT NOT NULL,
-    FechaHoraRegistro DATETIME NOT NULL,
+    FechaRegistro DATE NOT NULL,
     Telefono TEXT,
     Email TEXT,
     DetalleDireccion TEXT,
@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS Empleado(
     Salario FLOAT,
     NumVentas INTEGER,
     Cedula INTEGER NOT NULL,
+    FechaIngreso DATE,
     FOREIGN KEY (Cedula) REFERENCES Usuario(Cedula)
 );
 
