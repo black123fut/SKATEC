@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION agregarListaEnvio(IN NumEnvio INT, IN Sucursal INT, IN Cantidad INT, IN Producto INT)
+CREATE OR REPLACE FUNCTION AgregarListaEnvio(IN NumEnvio INT, IN Sucursal INT, IN Cantidad INT, IN Producto INT)
 RETURNS INT AS $$
 BEGIN
     UPDATE Articulo
@@ -32,10 +32,8 @@ RETURNS TABLE(Descripcion TEXT, IdCanton INTEGER)
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT Di.Descripcion, Ca.idcanton FROM Direccion Di
-    INNER JOIN Canton Ca ON Di.idcanton = Ca.idcanton
-    INNER JOIN Sucursal Su ON Di.iddireccion = Su.iddireccion
-    WHERE Su.IdSucursal = Id;
+    SELECT DetalleDireccion, IdCanton FROM Sucursal
+    WHERE IdSucursal = Id;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -75,11 +73,11 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION AumentarSalario (IN IdMejorEmpleado INT)
 RETURNS INT AS $$
 BEGIN
-    UPDATE Vendedor
+    UPDATE Empleado
     SET Salario = Salario + 20000
     WHERE IdEmpleado = IdMejorEmpleado;
 END;
-$$ LANGUAGE plpgsql
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION RegistrarCliente(ced INT, fechaIn DATE, fechaExp DATE)
 RETURNS TABLE(IdCliente INT) AS $$

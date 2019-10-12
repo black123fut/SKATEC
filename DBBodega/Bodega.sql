@@ -20,13 +20,6 @@ CREATE TABLE IF NOT EXISTS Canton (
     FOREIGN KEY (IdProvincia) REFERENCES Provincia (IdProvincia)
 );
 
-CREATE TABLE IF NOT EXISTS Direccion (
-    IdDireccion SERIAL PRIMARY KEY,
-    IdCanton INTEGER NOT NULL,
-    Descripcion TEXT NOT NULL,
-    FOREIGN KEY (IdCanton) REFERENCES Canton (IdCanton)
-);
-
 /*
         Persona - Cliente
  */
@@ -36,8 +29,9 @@ CREATE TABLE IF NOT EXISTS Usuario (
     Apellido TEXT NOT NULL,
     Telefono TEXT,
     Email TEXT,
-    IdDireccion INTEGER NOT NULL,
-    FOREIGN KEY (IdDireccion) REFERENCES Direccion(IdDireccion)
+    IdCanton INTEGER NOT NULL,
+    DetalleDireccion TEXT,
+    FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton)
 );
 
 CREATE TABLE IF NOT EXISTS Cliente (
@@ -58,8 +52,9 @@ CREATE TABLE IF NOT EXISTS Sucursal (
     Nombre TEXT NOT NULL,
     Descripcion TEXT NOT NULL,
     Estado TEXT NOT NULL,
-    IdDireccion INTEGER NOT NULL,
-    FOREIGN KEY (IdDireccion) REFERENCES Direccion(IdDireccion)
+    DetalleDireccion TEXT,
+    IdCanton INTEGER NOT NULL,
+    FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton)
 );
 
 /*
@@ -73,6 +68,7 @@ CREATE TABLE IF NOT EXISTS Empleado (
     FechaIngreso DATE NOT NULL,
     NumVentas INTEGER NOT NULL,
     Puesto TEXT NOT NULL,
+    Salario FLOAT NOT NULL,
     FOREIGN KEY (Cedula) REFERENCES Usuario(Cedula)
 );
 
@@ -88,7 +84,6 @@ CREATE TABLE IF NOT EXISTS Administrador (
 
 CREATE TABLE IF NOT EXISTS EmpleadoBodega (
     IdEmpleado INTEGER NOT NULL,
-    Salario FLOAT NOT NULL,
     FOREIGN KEY (IdEmpleado) REFERENCES Empleado(IdEmpleado)
 );
 
@@ -96,15 +91,15 @@ CREATE TABLE IF NOT EXISTS Vendedor (
     IdVendedor SERIAL PRIMARY KEY,
     IdEmpleado INTEGER NOT NULL,
     IdSucursal INTEGER NOT NULL,
-    Salario FLOAT NOT NULL,
     NumVentas INTEGER NOT NULL,
     FOREIGN KEY (IdEmpleado) REFERENCES Empleado(IdEmpleado),
     FOREIGN KEY (IdSucursal) REFERENCES Sucursal(IdSucursal)
 );
 
 CREATE TABLE IF NOT EXISTS EmpleadoMes (
-    IdVendedor INTEGER NOT NULL,
-    FechaEmpleadoMes DATE NOT NULL
+    IdEmpleado INTEGER NOT NULL,
+    FechaEmpleadoMes DATE NOT NULL,
+    FOREIGN KEY (IdEmpleado) REFERENCES Empleado(IdEmpleado)
 );
 
 /*
@@ -119,8 +114,9 @@ CREATE TABLE IF NOT EXISTS Proveedor (
     Nombre TEXT NOT NULL,
     Telefono TEXT NOT NULL,
     CedulaJuridica TEXT NOT NULL,
-    IdDireccion INTEGER NOT NULL,
-    FOREIGN KEY (IdDireccion) REFERENCES Direccion(IdDireccion)
+    DetalleDireccion TEXT,
+    IdCanton INTEGER NOT NULL,
+    FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton)
 );
 
 CREATE TABLE IF NOT EXISTS Producto (
@@ -199,6 +195,7 @@ CREATE TABLE IF NOT EXISTS Factura (
     IdCliente INTEGER NOT NULL,
     FechaCompra TIMESTAMP NOT NULL,
     FechaVenceGarantia DATE,
+    MontoTotal FLOAT,
     FOREIGN KEY (IdSucursal) REFERENCES Sucursal(IdSucursal),
     FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente)
 );
