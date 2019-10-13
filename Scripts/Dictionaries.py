@@ -32,9 +32,10 @@ insertar = {
     "Factura": "INSERT INTO Factura (IdFacturaSucursal,IdSucursal,IdCliente,IdEmpleado,FechaCompra,MontoTotal,FechaVenceGarantia,MetodoPago) VALUES ",
     "EmpleadoMes": "INSERT INTO EmpleadoMes(IdEmpleado, FechaEmpleadoMes) VALUES ",
     "Venta": "INSERT INTO Venta(IdFactura,IdArticulo,Precio) VALUES ",
-    "Usuario": "INSERT INTO  Usuario(Cedula,Nombre,Apellido,FechaHoraRegistro,Telefono,Email,DetalleDireccion,FechaNacimiento,IdCanton) VALUES ",
-    "Cliente": "INSERT INTO Cliente(IdCliente,Cedula) VALUES",
-    "Vendedor": "INSERT INTO Vendedor(IdEmpleado,IdSucursal,NumVentas) VALUES "
+    "Usuario": "INSERT INTO  Usuario(Cedula,Nombre,Apellido,FechaRegistro,Telefono,Email,DetalleDireccion,FechaNacimiento,IdCanton) VALUES ",
+    "Cliente": "INSERT INTO Cliente(IdCliente,Cedula,Puntos,FechaInicio,FechaExpiracion) VALUES",
+    "Vendedor": "INSERT INTO Vendedor(IdEmpleado,IdSucursal,NumVentas) VALUES ",
+    "Empleado": "INSERT INTO Empleado(IdEmpleado,CodigoEmpleado,Estado,IdSucursal,Puesto,Salario,NumVentas,Cedula,FechaIngreso) VALUES "
 }
 
 insertarMySQL = {

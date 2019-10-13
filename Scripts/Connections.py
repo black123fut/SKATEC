@@ -14,7 +14,7 @@ def getSucursal(numDB):
         host="localhost",
         database="sucursal" + str(numDB),
         user="root",
-        passwd="SuContraseñaPrro",
+        passwd="suContraseñaPrro",
         port=3306
     )
 

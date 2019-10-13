@@ -5,7 +5,7 @@ BEGIN
     VALUES (idFact,idArt,prec);
     
     UPDATE Articulo
-    SET Estado = 'Vendido-Garantia-Activa'
+    SET Estado = 'Vendido'
     WHERE Articulo.IdArticulo = idArt;
 END //
 DELIMITER ;

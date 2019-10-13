@@ -141,7 +141,7 @@ def obtenerNombre(cedula):
     with urllib.request.urlopen("https://apis.gometa.org/cedulas/" + str(cedula) + "&key=KtivgvSWRiAWCZK") as url:
         data = json.loads(url.read().decode())
         if data['resultcount'] == 0:
-            return 'ID not found'
+            return 1,1
         nombre = data["results"][0]["firstname1"]
         apellidos =  data["results"][0]["lastname"]
         return nombre, apellidos
