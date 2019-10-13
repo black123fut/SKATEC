@@ -36,7 +36,6 @@ CREATE TABLE IF NOT EXISTS Usuario (
 );
 
 
-
 CREATE TABLE IF NOT EXISTS Cliente (
     IdCliente SERIAL PRIMARY KEY,
     Cedula INTEGER NOT NULL,
@@ -154,7 +153,7 @@ CREATE TABLE IF NOT EXISTS Articulo (
     IdProducto INTEGER NOT NULL,
     IdSucursal INTEGER NOT NULL,
     CodigoArticulo TEXT UNIQUE NOT NULL,
-    Estado TEXT NOT NULL, --Embodegado, EnCamino, Disponible, Vendido-Garantia-Activa, Vendido-Garantia-Inactiva
+    Estado TEXT NOT NULL, --Embodegado, EnCamino, Disponible, Vendido
     FechaRegistro DATE NOT NULL,
     FOREIGN KEY (IdProducto) REFERENCES Producto(IdProducto),
     FOREIGN KEY (IdSucursal) REFERENCES Sucursal(IdSucursal)
@@ -194,14 +193,17 @@ CREATE TABLE IF NOT EXISTS ListaEnvio (
  */
 CREATE TABLE IF NOT EXISTS Factura (
     IdFactura SERIAL PRIMARY KEY,
+    IdFacturaSucursal INTEGER NOT NULL,
     IdSucursal INTEGER NOT NULL,
     IdCliente INTEGER NOT NULL,
+    IdEmpleado INTEGER NOT NULL,
     FechaCompra TIMESTAMP NOT NULL,
     FechaVenceGarantia DATE,
     MontoTotal FLOAT,
     MetodoPago TEXT NOT NULL,
     FOREIGN KEY (IdSucursal) REFERENCES Sucursal(IdSucursal),
-    FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente)
+    FOREIGN KEY (IdCliente) REFERENCES Cliente(IdCliente),
+    FOREIGN KEY (IdEmpleado) REFERENCES Empleado(IdEmpleado)
 );
 
 

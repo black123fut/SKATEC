@@ -51,22 +51,3 @@ insertarMySQL = {
     "Factura": "INSERT INTO Factura (IdEmpleado,IdCliente,FechaCompra,PuntosObtenidos,MontoTotal,FechaVenceGarantia,MetodoPago) VALUES ",
     "Empleado": "INSERT INTO Empleado(IdEmpleado,CodigoEmpleado,Estado,IdSucursal,Puesto,Salario,NumVentas,Cedula,FechaIngreso) VALUES "
 }
-
-nombres = ["Carlos","Kevin","Luis","Isaac","Joseph","Vanesa","Jessica","Elena","Katherine","Capilla","Cañosanto",
-               "Camino","Buen suceso","Salud","Vasco","Valvanera","Yedra","Triana","Palma","Blasco","Mayte","Medir",
-               "Melodía","Mencía","Mercedario","Munio","Muño","Nela","Nelia","Luscinda","Luzdivina","Mabel","Reyes",
-               "Mairena","Lulú","Lobo","Lucinda","Lluvia","Llanos","Liria","Lirios","Lirio","Maite","Maravilla","Marín",
-               "Maritere","Marisol","Marisa","Mariola","Mariluz","Marilena","Marilén","Maricruz","Maribel","Marianela",
-               "Mariam","Maravillas","Librado","Librada","Libertad","Lesmes","Lágrimas","Gutierre","Florida","Fina",
-               "Fraternidad","Fuencisla","Fuensanta","Emeterio","Encina","Escarlata","Espino","Fadrique","Felicidad",
-               "Fernán","García","Garcilaso","Indalecia","Gozos","Graciosa","Granada"]
-
-apellidos = ["González","Rodríguez","Gómez","Fernández","López","Díaz","Pérez","García","Sánchez","Romero","Sosa",
-                 "Torres","Álvarez","Ruiz","Ramírez","Flores","Benítez","Acosta","Medina","Herrera","Suárez","Aguirre",
-                 "Giménez","Gutiérrez","Pereyra","Rojas","Molina","Castro","Ortiz","Silva","Núñez","Luna","Juárez",
-                 "Cabrera","Ríos","Morales","Godoy","Moreno","Ferreyra","Domínguez","Carrizo","Peralta","Castillo",
-                 "Ledesma","Quiroga","Vega","Vera","Muñoz","Ojeda","Ponce","Villalba","Cardozo","Navarro","Coronel",
-                 "Vázquez","Ramos","Vargas","Cáceres","Arias","Figueroa","Córdoba","Correa","Maldonado","Paz","Rivero",
-                 "Miranda","Mansilla","Farias","Roldán","Méndez","Guzmán","Aguero","Hernández","Lucero","Cruz","Páez",
-                 "Escobar","Mendoza","Barrios","Bustos","Ávila","Ayala","Blanco","Soria","Maidana","Acuña","Leiva","Duarte",
-                 "Moyano","Campos","Soto","Martín","Valdez","Bravo","Chávez","Velázquez","Olivera","Toledo","Franco"]

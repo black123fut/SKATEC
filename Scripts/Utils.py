@@ -63,7 +63,7 @@ def GenerarFecha():
 
 def GenerarFechaGarantia():
     fechaIn = time.strftime('%Y-%m-%d')
-    fechaFin = str(int(fechaIn[:4])+1) + fechaIn[4:]
+    fechaFin = str(int(fechaIn[:4]) + 1) + fechaIn[4:]
     return fechaIn, fechaFin
 
 
@@ -139,7 +139,7 @@ def obtenerNombre(cedula):
     with urllib.request.urlopen("https://apis.gometa.org/cedulas/" + str(cedula) + "&key=KtivgvSWRiAWCZK") as url:
         data = json.loads(url.read().decode())
         if data['resultcount'] == 0:
-            return 1,1
+            return 1, 1
         nombre = data["results"][0]["firstname1"]
         apellidos = data["results"][0]["lastname"]
         return nombre, apellidos
@@ -147,31 +147,13 @@ def obtenerNombre(cedula):
 
 def CalcularPuntos(monto):
     if monto > 50000:
-        puntos = int(monto*0.1)
+        puntos = int(monto * 0.1)
         return puntos
     else:
-        puntos = int(monto*0.05)
+        puntos = int(monto * 0.05)
         return puntos
 
 
-def GenerarCedula():
-    cedula = str(random.randint(1, 7))
-    for i in range(8):
-        cedula = cedula + str(random.randint(0, 9))
-    cedula = int(cedula)
-    return cedula
-
-	
-def GenerarNombre():
-    ind = random.randint(0, 79)
-    return nombres[ind]
-
-	
-def GenerarApellido():
-    ind = random.randint(0,99)
-    return apellidos[ind]
-
-	
 def GenerarTel():
     telefono = str(random.randint(2, 9))
     for i in range(7):
@@ -180,7 +162,7 @@ def GenerarTel():
 
 
 def GenerarEmail(nombre):
-    num = random.randint(1,5)
+    num = random.randint(1, 5)
     if num == 1:
         return nombre + "@gmail.com"
     elif num == 2:
@@ -192,7 +174,7 @@ def GenerarEmail(nombre):
     else:
         return nombre + "@livemail.com"
 
-		
+
 def getUsuarioPG(cedula):
     sentenciaPSQL = "SELECT * FROM Usuario WHERE Cedula = %s"
     cursor.execute(sentenciaPSQL, (str(cedula),))

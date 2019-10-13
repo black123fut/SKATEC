@@ -17,6 +17,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION ColocadosEnSucursal()
 RETURNS INT AS $$
 BEGIN
@@ -37,38 +38,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION ActualizarFactura(idFact INT, monto INT, points INT, idClient INT, idEmp INT)
-RETURNS INT AS $$
-BEGIN
-	UPDATE Factura
-    SET MontoTotal = monto
-    WHERE Factura.IdFactura = idFact;
-    
-    UPDATE Cliente
-    SET Puntos = Puntos + points
-    WHERE Cliente.IdCliente = idClient;
-    
-    UPDATE Empleado
-    SET NumVentas = NumVentas + 1
-    WHERE Empleado.IdEmpleado = idEmp;
-	
-	RETURN 1;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION Venta(idFact INT, idArt INT, prec FLOAT)
-RETURNS INT AS $$
-BEGIN
-    INSERT INTO Venta(IdFactura,IdArticulo,Precio) 
-    VALUES (idFact,idArt,prec);
-    
-    UPDATE Articulo
-    SET Estado = 'Vendido-Garantia-Activa'
-    WHERE Articulo.IdArticulo = idArt;
-	
-    RETURN 1;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION AumentarSalario (IN IdMejorEmpleado INT)
 RETURNS INT AS $$
@@ -78,6 +47,7 @@ BEGIN
     WHERE IdEmpleado = IdMejorEmpleado;
 END;
 $$ LANGUAGE plpgsql;
+
 
 CREATE OR REPLACE FUNCTION RegistrarCliente(ced INT, fechaIn DATE, fechaExp DATE)
 RETURNS TABLE(IdCliente INT) AS $$
@@ -91,6 +61,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION RegistrarEmpleado(ced INT, codigo VARCHAR(30), fechaIn DATE, puest VARCHAR(30), salar FLOAT)
 RETURNS TABLE(IdEmpleado INT) AS $$
 BEGIN
@@ -100,5 +71,27 @@ BEGIN
     RETURN QUERY
     SELECT E.IdEmpleado FROM Empleado E
     WHERE E.Cedula = ced;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION ActualizarCliente(IN Id INT, IN PuntosGanados INT)
+RETURNS INT AS $$
+BEGIN
+    UPDATE Cliente
+    SET Puntos = Puntos + PuntosGanados
+    WHERE IdCliente = Id;
+
+    RETURN 1;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION ActualizarArticulo(IN IdArt INT, IN Est TEXT)
+RETURNS INT AS $$
+BEGIN
+    UPDATE Articulo
+    SET Estado = Est
+    WHERE IdArticulo = IdArt;
 END;
 $$ LANGUAGE plpgsql;
