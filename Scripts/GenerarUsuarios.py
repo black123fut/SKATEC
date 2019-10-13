@@ -98,67 +98,146 @@ def GenerarCodigoEmpleado(idSuc):
     return codigo
 
 
-def CrearCliente(cedula, nombre, apellidos, fecha, fechaNac, telefono, email, direccion, canton):
+def CrearCliente(cedula, nombre, apellidos, fechaNac, telefono, email, direccion, canton):
+    fecha, fechaVence = GenerarFechaGarantia()
     sentenciaPSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-    try:
-        cursor.execute(sentenciaPSQL, (
-        str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion), str(fechaNac),
-        str(canton)))
-        conexion.commit()
+    if len(cedula) < 9:
+        print("cedula demasiado pequeña")
+    else:
+        try:
+            cursor.execute(sentenciaPSQL, (
+                str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion),
+                str(fechaNac),
+                str(canton)))
+            conexion.commit()
 
-        print("Usuario creado con exito")
+            print("Usuario creado con exito")
 
-        cursor.callproc("RegistrarCliente", (str(cedula), str(fecha), str(fecha)))
-        conexion.commit()
-        resultado = cursor.fetchone()
+            cursor.callproc("RegistrarCliente", (str(cedula), str(fecha), str(fechaVence)))
+            conexion.commit()
+            resultado = cursor.fetchone()
 
-        idCliente = resultado[0]
+            idCliente = resultado[0]
 
-        for n in range(3):
-            mydb, mycursor = getSucursal(n + 1)
+            for n in range(3):
+                mydb, mycursor = getSucursal(n + 1)
+                sentenciaMSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                mycursor.execute(sentenciaMSQL, (
+                    str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion),
+                    str(fechaNac), str(canton)))
+                mydb.commit()
+
+                sentenciaMSQL = insertar["Cliente"] + "(%s,%s,0,%s,%s)"
+                mycursor.execute(sentenciaMSQL, (str(idCliente), str(cedula), str(fecha), str(fechaVence)))
+                mydb.commit()
+            print("Cliente registrado con exito")
+
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+            print("Usuario Existente")
+
+            try:
+                cursor.callproc("RegistrarCliente", (str(cedula), str(fecha), str(fechaVence)))
+                conexion.commit()
+                resultado = cursor.fetchone()
+
+                idCliente = resultado[0]
+
+                for n in range(3):
+                    mydb, mycursor = getSucursal(n + 1)
+                    sentenciaMSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    mycursor.execute(sentenciaMSQL, (
+                        str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion),
+                        str(fechaNac), str(canton)))
+                    mydb.commit()
+
+                    sentenciaMSQL = insertar["Cliente"] + "(%s,%s,0,%s,%s)"
+                    mycursor.execute(sentenciaMSQL, (str(idCliente), str(cedula), str(fecha), str(fechaVence)))
+                    mydb.commit()
+                print("Cliente registrado con exito")
+
+            except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+                print("Clinete ya registrado")
+
+
+
+def CrearEmpleado(cedula, nombre, apellidos, fechaNac, telefono, email, direccion, canton, puesto, idSucursal, salario):
+    sentenciaPSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    fecha, fechaFin = GenerarFechaGarantia()
+    if len(cedula) < 9:
+        print("cedula demasiado pequeña")
+    else:
+        try:
+            cursor.execute(sentenciaPSQL, (
+                str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion),
+                str(fechaNac),
+                str(canton)))
+            conexion.commit()
+
+            print("Usuario creado con exito")
+
+            codigo = GenerarCodigoEmpleado(idSucursal)
+
+            cursor.callproc("RegistrarEmpleado", (str(cedula), str(codigo), str(fecha), str(puesto), str(salario)))
+            conexion.commit()
+            resultado = cursor.fetchone()
+
+            idEmpleado = resultado[0]
+
+            if puesto == "Vendedor":
+                sentenciaPSQL = insertar["Vendedor"] + "(%s,%s,0)"
+                cursor.execute(sentenciaPSQL,(str(idEmpleado),str(idSucursal)))
+                conexion.commit()
+            elif puesto == "Administrador":
+                sentenciaPSQL = insertar["Administrador"] + "(%s,%s,%s,%s)"
+                cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal), str(fecha),str(fechaFin)))
+                conexion.commit()
+
+            mydb, mycursor = getSucursal(idSucursal)
             sentenciaMSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
             mycursor.execute(sentenciaMSQL, (
-            str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion),
-            str(fechaNac), str(canton)))
+                str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion),
+                str(fechaNac), str(canton)))
             mydb.commit()
 
-            sentenciaMSQL = insertar["Cliente"] + "(%s,%s,0,%s,%s)"
-            mycursor.execute(sentenciaMSQL, (str(idCliente), str(cedula), str(fecha),str(fecha)))
+            sentenciaMSQL = insertar["Empleado"] + "(%s,%s,\"Activo\",%s,\"Vendedor\",%s,0,%s,%s)"
+            mycursor.execute(sentenciaMSQL,
+                             (str(idEmpleado), str(codigo), str(idSucursal), str(salario), str(cedula), str(fecha)))
             mydb.commit()
+            print("Empleado registrado con exito")
 
-    except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
-        return 1
+        except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+            print("Usuario Existente")
 
+            try:
+                codigo = GenerarCodigoEmpleado(idSucursal)
 
-n = GenerarVendedores(3,1,305070075)
-print(n)
+                cursor.callproc("RegistrarEmpleado", (str(cedula), str(codigo), str(fecha), str(puesto), str(salario)))
+                conexion.commit()
+                resultado = cursor.fetchone()
 
+                idEmpleado = resultado[0]
 
-#def CrearEmpleado():
-"""
+                if puesto == "Vendedor":
+                    sentenciaPSQL = insertar["Vendedor"] + "(%s,%s,0)"
+                    cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal)))
+                    conexion.commit()
+                elif puesto == "Administrador":
+                    sentenciaPSQL = insertar["Administrador"] + "(%s,%s,%s,%s)"
+                    cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal), str(fecha), str(fechaFin)))
+                    conexion.commit()
 
-def GenerarUsuario(cedula):
-    nombre, apellidos = obtenerNombre(cedula)
-    if nombre != 1:
-        nombreCompleto = nombre + apellidos
-        fecha = GenerarFecha()
-        fechaNac = GenerarFechaNac()
-        telefono = GenerarTel()
-        email = GenerarEmail(nombreCompleto)
-        direccion = GenerarDireccion()
-        canton = random.randint(1, 82)
+                mydb, mycursor = getSucursal(idSucursal)
+                sentenciaMSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                mycursor.execute(sentenciaMSQL, (
+                    str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email), str(direccion),
+                    str(fechaNac), str(canton)))
+                mydb.commit()
 
-        sentenciaPSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-        try:
-            cursor.execute(sentenciaPSQL, (str(cedula),str(nombre),str(apellidos),str(fecha),str(telefono),str(email),str(direccion),str(fechaNac), str(canton)))
-            conexion.commit()
-            return fecha
-        except psycopg2.errors.UniqueViolation:
-            return 1
-    return 2
+                sentenciaMSQL = insertar["Empleado"] + "(%s,%s,\"Activo\",%s,\"Vendedor\",%s,0,%s,%s)"
+                mycursor.execute(sentenciaMSQL,
+                                 (str(idEmpleado), str(codigo), str(idSucursal), str(salario), str(cedula), str(fecha)))
+                mydb.commit()
+                print("Empleado registrado con exito")
 
-
-
-fecha = GenerarUsuario(305070087)
-print(fecha)
-"""
+            except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
+                print("Empleado ya registrado")

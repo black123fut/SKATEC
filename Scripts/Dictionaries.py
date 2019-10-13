@@ -35,7 +35,8 @@ insertar = {
     "Usuario": "INSERT INTO  Usuario(Cedula,Nombre,Apellido,FechaRegistro,Telefono,Email,DetalleDireccion,FechaNacimiento,IdCanton) VALUES ",
     "Cliente": "INSERT INTO Cliente(IdCliente,Cedula,Puntos,FechaInicio,FechaExpiracion) VALUES",
     "Vendedor": "INSERT INTO Vendedor(IdEmpleado,IdSucursal,NumVentas) VALUES ",
-    "Empleado": "INSERT INTO Empleado(IdEmpleado,CodigoEmpleado,Estado,IdSucursal,Puesto,Salario,NumVentas,Cedula,FechaIngreso) VALUES "
+    "Administrador": "INSERT INTO Administrador(IdEmpleado,IdSucursal,InicioAdmin,FinAdmin) VALUES ",
+    "Empleado": "INSERT INTO Empleado(IdEmpleado,CodigoEmpleado,Estado,Puesto,Salario,NumVentas,Cedula,FechaIngreso) VALUES "
 }
 
 insertarMySQL = {
@@ -47,7 +48,8 @@ insertarMySQL = {
     "ListaSolicitud": insertar["ListaSolicitud"],
     "Promocion": "INSERT INTO Promocion(CodigoProducto,CodigoSucursal,FechaHoraInicio,FechaHoraFin,Descuento,IdProducto) VALUES ",
     "EmpleadoMes": "INSERT INTO EmpleadoMes(IdEmpleado, FechaEmpleadoMes) VALUES ",
-    "Factura": "INSERT INTO Factura (IdEmpleado,IdCliente,FechaCompra,PuntosObtenidos,MontoTotal,FechaVenceGarantia,MetodoPago) VALUES "
+    "Factura": "INSERT INTO Factura (IdEmpleado,IdCliente,FechaCompra,PuntosObtenidos,MontoTotal,FechaVenceGarantia,MetodoPago) VALUES ",
+    "Empleado": "INSERT INTO Empleado(IdEmpleado,CodigoEmpleado,Estado,IdSucursal,Puesto,Salario,NumVentas,Cedula,FechaIngreso) VALUES "
 }
 
 nombres = ["Carlos","Kevin","Luis","Isaac","Joseph","Vanesa","Jessica","Elena","Katherine","Capilla","Cañosanto",
