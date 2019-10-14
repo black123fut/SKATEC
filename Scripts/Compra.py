@@ -7,7 +7,7 @@ def CrearFactura(idCliente, idEmpleado,fecha,fechaVence,metoPago,mydb, mycursor)
     mycursor.execute(sentenciaMSQL,(str(idEmpleado),str(idCliente),str(fecha),str(fechaVence),str(metoPago)))
     mydb.commit()
 
-    sentenciaMSQL = "SELECT IdFactura FROM Fractura"
+    sentenciaMSQL = "SELECT IdFactura FROM Factura"
     mycursor.execute(sentenciaMSQL)
     idFactura = len(mycursor.fetchall())
 
@@ -67,13 +67,14 @@ def GenerarCompras(numCompras):
         for n in range(numCompras):
             sentenciaMSQL = "SELECT IdCliente FROM Cliente"
             mycursor.execute(sentenciaMSQL)
-            cantidadClientes = len(cursor.fetchall())
+            cantidadClientes = len(mycursor.fetchall())
             idCliente = random.randint(1,cantidadClientes)
 
             sentenciaMSQL = "SELECT IdEmpleado FROM Empleado WHERE Puesto = \"Vendedor\""
             mycursor.execute(sentenciaMSQL)
-            cantidadEmpleados = len(mycursor.fetchall())
-            idEmpleado = random.randint(1, cantidadEmpleados)
+            cantidadEmpleados = mycursor.fetchall()
+            posicion = random.randint(1, len(cantidadEmpleados))
+            idEmpleado = int(cantidadEmpleados[posicion][0])
 
             fechaIn,fechaFin = GenerarFechaGarantia()
 
@@ -100,7 +101,7 @@ def GenerarCompras(numCompras):
                 else:
                     print("check")
                     idArt = resultados[0][0]
-                    Venta(idArt, idFactura, precio)
+                    Venta(idArt, idFactura, precio, mydb, mycursor)
                     monto += precio
                     
             puntosGanados = CalcularPuntos(monto)
@@ -113,3 +114,5 @@ def metodoPago():
         return "Efectivo"
     else:
         return "Tarjeta"
+
+GenerarCompras(10)

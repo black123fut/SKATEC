@@ -70,7 +70,10 @@ def GenerarFechaGarantia():
 def GenerarFechaNac():
     anio = random.randint(1950, 2005)
     mes = random.randint(1, 12)
-    dia = random.randint(1, 30)
+    randDia = 30
+    if mes == 2:
+        randDia = 28
+    dia = random.randint(1, randDia)
     fecha = datetime.datetime(anio, mes, dia)
     return fecha.strftime('%Y-%m-%d')
 
@@ -136,7 +139,7 @@ def GenerarDireccion():
 
 
 def obtenerNombre(cedula):
-    with urllib.request.urlopen("https://apis.gometa.org/cedulas/" + str(cedula) + "&key=KtivgvSWRiAWCZK") as url:
+    with urllib.request.urlopen("https://apis.gometa.org/cedulas/" + str(cedula) + "&key=dfBzyOkvDxZoYoj") as url:
         data = json.loads(url.read().decode())
         if data['resultcount'] == 0:
             return 1, 1
@@ -180,3 +183,18 @@ def getUsuarioPG(cedula):
     cursor.execute(sentenciaPSQL, (str(cedula),))
     usuario = cursor.fetchone()
     return usuario
+
+def GenerarCedula():
+    cedula = str(random.randint(1, 7))
+    for i in range(8):
+        cedula = cedula + str(random.randint(0, 9))
+    cedula = int(cedula)
+    return cedula
+
+def GenerarNombre():
+    ind = random.randint(0, 79)
+    return nombres[ind]
+
+def GenerarApellido():
+    ind = random.randint(0,98)
+    return apellidos[ind]

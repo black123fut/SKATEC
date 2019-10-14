@@ -3,10 +3,8 @@ from Utils import *
 
 def aumentarSalario(idEmpleado, mycursor):
     mycursor.callproc('AumentarSalario', (idEmpleado, ))
-    cursor.execute('SELECT * FROM AumentarSalario (' + idEmpleado + ')')
 
-
-def agregarEmpleadoATablaMes(empleado, fechaactual, mycursor, mydb):
+def agregarEmpleadoATablaMes(empleado, fechaactual, mydb, mycursor):
     idEmpleado = str(empleado[0])
 
     myInsert = insertarMySQL["EmpleadoMes"] + "(" + idEmpleado + ", %s)"
@@ -31,7 +29,10 @@ def getEmpleadoMes(mes, anio, mycursor):
     fechapasada = GetFecha(aniopasado, mespasado, 1)
 
     mycursor.callproc('ObtenerEmpleadoMes', [fechapasada, fechaactual])
-    empleado = mycursor.fetchall()
+    empleado = []
+    for emp in mycursor.stored_results():
+        empleado += emp.fetchall()
+
     return empleado[0], fechaactual
 
 
@@ -39,4 +40,8 @@ def seleccionarEmpleadoMes(idsucursal, mes, anio):
     mydb, mycursor = getSucursal(idsucursal)
 
     empleado, fechaactual = getEmpleadoMes(mes, anio, mycursor)
+    print(empleado)
     agregarEmpleadoATablaMes(empleado, fechaactual, mydb, mycursor)
+
+
+# seleccionarEmpleadoMes(3, 11, 2019)

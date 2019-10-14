@@ -1,3 +1,4 @@
+
 CREATE OR REPLACE FUNCTION AgregarListaEnvio(IN NumEnvio INT, IN Sucursal INT, IN Cantidad INT, IN Producto INT)
 RETURNS INT AS $$
 BEGIN
@@ -12,8 +13,7 @@ BEGIN
     INSERT INTO ListaEnvio(IdArticulo, IdEnvio)
     SELECT IdArticulo, NumEnvio FROM Articulo
     WHERE Estado = 'EnCamino' AND IdSucursal = Sucursal;
-
-    RETURN 1;
+	RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -33,8 +33,8 @@ RETURNS TABLE(Descripcion TEXT, IdCanton INTEGER)
 AS $$
 BEGIN
     RETURN QUERY
-    SELECT DetalleDireccion, IdCanton FROM Sucursal
-    WHERE IdSucursal = Id;
+    SELECT S.DetalleDireccion, S.IdCanton FROM Sucursal S
+    WHERE S.IdSucursal = Id;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -93,5 +93,7 @@ BEGIN
     UPDATE Articulo
     SET Estado = Est
     WHERE IdArticulo = IdArt;
+	RETURN 1;
 END;
 $$ LANGUAGE plpgsql;
+

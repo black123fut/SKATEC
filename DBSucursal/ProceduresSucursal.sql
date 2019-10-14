@@ -57,6 +57,8 @@ BEGIN
 END //
 DELIMITER ;
 
+CALL ObtenerEmpleadoMes('2019-10-01', '2019-11-01')
+
 DELIMITER //
 CREATE PROCEDURE ComprasRealizadas(IN Fecha DATE)
 BEGIN
@@ -71,7 +73,7 @@ DELIMITER //
 CREATE PROCEDURE PuntosClientes(IN Fecha DATE)
 BEGIN
     SELECT C.IdCliente, C.Puntos FROM Cliente C
-    INNER JOIN Factura F ON F.IdFactura = C.IdCliente
+    INNER JOIN Factura F ON F.IdCliente = C.IdCliente
     WHERE F.FechaCompra = Fecha;
 END //
 DELIMITER ;
@@ -79,11 +81,14 @@ DELIMITER ;
 DELIMITER //
 CREATE PROCEDURE ObtenerPuntosGanados(IN IdCli INT, IN Fecha DATE)
 BEGIN
-    SELECT SUM(C.Puntos) AS PuntosGanados FROM Cliente C
-    INNER JOIN Factura F ON F.IdFactura = C.IdCliente
+    SELECT SUM(F.PuntosObtenidos) AS PuntosGanados FROM Cliente C
+    INNER JOIN Factura F ON F.IdCliente = C.IdCliente
     WHERE F.FechaCompra = Fecha AND F.IdCliente = IdCli;
 END //
 DELIMITER ;
+
+
+-- CALL PuntosClientes('2019-10-13')
 
 DELIMITER //
 CREATE PROCEDURE CantidadArticulos()

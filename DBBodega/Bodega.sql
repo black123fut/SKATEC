@@ -210,8 +210,14 @@ CREATE TABLE IF NOT EXISTS Factura (
 CREATE TABLE IF NOT EXISTS Venta (
     IdFactura INTEGER NOT NULL,
     IdArticulo INTEGER NOT NULL,
-    Cantidad INTEGER NOT NULL,
     Precio FLOAT NOT NULL,
     FOREIGN KEY (IdFactura) REFERENCES Factura(IdFactura),
     FOREIGN KEY (IdArticulo) REFERENCES Articulo(IdArticulo)
 );
+
+
+
+
+
+
+
