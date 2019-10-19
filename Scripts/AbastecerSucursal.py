@@ -34,19 +34,18 @@ def recibirEnSucursal(fecha, listaCantidades, sucursal, mydb, mycursor, idProd):
 
     cursor.execute("SELECT * FROM ObtenerDireccionSucursal(" + str(sucursal) + ")")
     direccion = cursor.fetchall()
-    print(direccion)
     for i in range(20):
         cont = str(i + 1) if idProd == 0 else str(idProd)
-        myInsert = insertarMySQL["ListaSolicitud"] + "(" + cont + ", " + str(ultimaSolicitud) + ", " + \
-                   str(listaCantidades[i]) + ")"
-        mycursor.execute(myInsert)
-        mydb.commit()
 
         sqlInsertar = "SELECT * FROM Articulo WHERE Estado = 'EnCamino' AND IdProducto = " + cont
         cursor.execute(sqlInsertar)
         articulos = unpackFecha(cursor.fetchall())
 
-        for j in range(listaCantidades[i]):
+        myInsert = insertarMySQL["ListaSolicitud"] + "(" + cont + ", " + str(ultimaSolicitud) + ", " + \
+                   str(len(articulos)) + ")"
+        mycursor.execute(myInsert)
+        mydb.commit()
+        for j in range(len(articulos)):
             myInsert = insertarMySQL["Articulo"] + "(" + str(articulos[j][0]) + ", " + str(articulos[j][1]) + ", " + \
                        str(articulos[j][2]) + ", %s, %s, %s, %s, " + str(direccion[0][1]) + ")"
             mycursor.execute(myInsert, (articulos[j][3], 'Disponible', articulos[j][5], direccion[0][0]))
@@ -54,16 +53,21 @@ def recibirEnSucursal(fecha, listaCantidades, sucursal, mydb, mycursor, idProd):
 
             myInsert = insertarMySQL["ListaRecibido"] + "(" + str(articulos[j][0]) + ", " + str(ultimaSolicitud) + ")"
             mycursor.execute(myInsert)
-
+            mydb.commit()
         if idProd != 0:
             break
 
     # Cambia el estado de los articulos en bodega a disponibles
     cursor.callproc("ColocadosEnSucursal", ())
+    conexion.commit()
 
 
-# Llena todas las sucursales con un poco de todos los productos
 def llenarSucursales(fecha):
+    """
+    Llena todas las sucursal con un poco de todos los productos
+    :param fecha:
+    :return:
+    """
     for n in range(3):
         numSucursal = n + 1
         mydb, mycursor = getSucursal(numSucursal)
@@ -73,16 +77,44 @@ def llenarSucursales(fecha):
         recibirEnSucursal(fecha, totalLista, numSucursal, mydb, mycursor, 0)
 
 
-
-llenarSucursales(datetime.datetime(2019, 10, 1).strftime('%Y-%m-%d'))
-
-
-# Llena una sucursal espeifica con un producto y cantidad especifica
-def pedirProductosBodega(nombreProd, categoria, idSucursal, cantidad):
+def pedirProductosBodega(nombreProd, categoria, idSucursal, cantidad, idProd):
+    """
+    Pide una cantidad de producto especifico a una sucursal especfica.
+    :param nombreProd: Nombre del producto que se va a pedir.
+    :param categoria: Categoria del producto que se va a pedir.
+    :param idSucursal: Id de la sucursal donde se va a hacer el pedido.
+    :param cantidad: Cantidad de articulos que se solicitan.
+    """
     mydb, mycursor = getSucursal(idSucursal)
     fecha = time.strftime('%Y-%m-%d')
 
-    idProducto = getIdProductoPG(nombreProd, categoria)[0][0]
+    idProducto = getIdProductoPG(nombreProd, categoria)[0][0] if idProd == 0 else idProd
     solicitarMercaderia(fecha, mydb, mycursor)
     totalLista = enviarAlTransporte(idSucursal, fecha, idProducto, cantidad)
     recibirEnSucursal(fecha, totalLista, idSucursal, mydb, mycursor, idProducto)
+
+
+def pedirArticulosFaltantes(idSucursal):
+    """
+    Llena la una sucursal especifica con los articulos que faltan para que tenga minimo 5 de ese producto
+    """
+    mydb, mycursor = getSucursal(idSucursal)
+
+    mycursor.callproc('CantidadArticulosDisponibles')
+    stock = obtenerResultado(mycursor.stored_results())
+    idlista = []
+    for i in range(len(stock)):
+        faltantes = 10 - stock[i][3]
+        if faltantes > 0:
+            pedirProductosBodega(stock[i][0], stock[i][1], idSucursal, faltantes, 0)
+        idlista += [stock[i][2]]
+
+    agotados = complementoLista(idlista)
+    for i in range(len(agotados)):
+        pedirProductosBodega("", "", idSucursal, 10, agotados[i])
+
+
+for i in range(1, 4):
+    pedirArticulosFaltantes(i)
+# fechaapedido = datetime.datetime(2019, 10, 2).strftime('%Y-%m-%d')
+# llenarSucursales(fechaapedido)

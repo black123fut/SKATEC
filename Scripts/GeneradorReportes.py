@@ -13,7 +13,6 @@ def ventas(mycursor, fecha, rango, numfacturas):
     ventas = obtenerResultado(mycursor.stored_results())
 
     inicio = rango + 1
-    print( "largo :   ",len(ventas))
     for i in range(numfacturas):
         insertPG = insertar["Venta"] + "(" + str(inicio) + ", " + \
                    str(ventas[i][1]) + ", " + str(ventas[i][2]) + ")"
@@ -27,12 +26,11 @@ def agregarPuntosClientes(clientes, fecha, mycursor):
         id = clientes[i][0]
         mycursor.callproc('ObtenerPuntosGanados', (id, fecha))
         puntosGanados = obtenerResultado(mycursor.stored_results())[0][0]
-        print(id ,"           ", puntosGanados)
         cursor.callproc('ActualizarCliente', (id, int(puntosGanados)))
 
 
 def agregarFacturasEnBodega(facturas, idSucursal):
-    cursor.execute('SELECT IdFactura FROM Factura')
+    cursor.execute('SELECT IdFactura FROM Factura WHERE FechaCompra=%s', (time.strftime('%Y-%m-%d'),))
     ids = cursor.fetchall()
 
     for i in range(len(facturas)):
@@ -44,24 +42,17 @@ def agregarFacturasEnBodega(facturas, idSucursal):
     return len(ids), len(facturas)
 
 
-def crearCSV(fecha, lista, nombre):
-    path = "Reportes/" + fecha + "/"
+def crearCSV(fecha, lista, nombre, idSucursal):
+    path = "Reportes/Sucursal" + str(idSucursal) + "/" + fecha + "/"
     if not os.path.exists(path):
         os.mkdir(path)
 
     with open(path + nombre + '.csv', 'w') as csvFile:
         writer = csv.writer(csvFile)
-        print(lista)
         writer.writerows(lista)
 
     csvFile.close()
 
-
-def obtenerResultado(stored):
-    lista = []
-    for resultados in stored:
-        lista += resultados.fetchall()
-    return lista
 
 def obtenerCambios(mycursor, mydb, idSucursal):
     fecha = time.strftime('%Y-%m-%d')
@@ -72,24 +63,27 @@ def obtenerCambios(mycursor, mydb, idSucursal):
     mycursor.callproc('PuntosClientes', (fecha,))
     clientes = obtenerResultado(mycursor.stored_results())
 
-    mycursor.callproc('CantidadArticulos')
+    mycursor.callproc('CantidadArticulosDisponibles')
     stock = obtenerResultado(mycursor.stored_results())
 
     mycursor.callproc('ObtenerFacturas', (fecha,))
     facturas = obtenerResultado(mycursor.stored_results())
 
-    crearCSV(fecha, articulos, "ArticulosVendidos")
-    crearCSV(fecha, clientes, "PuntosDeClientes")
-    crearCSV(fecha, stock, "Inventario")
-    crearCSV(fecha, facturas, "Facturas")
+    crearCSV(fecha, articulos, "ArticulosVendidos", idSucursal)
+    crearCSV(fecha, clientes, "PuntosDeClientes", idSucursal)
+    crearCSV(fecha, stock, "Inventario", idSucursal)
+    crearCSV(fecha, facturas, "Facturas", idSucursal)
 
     rango, numfacturas = agregarFacturasEnBodega(facturas, idSucursal)
-    #agregarPuntosClientes(clientes, fecha, mycursor)
+    agregarPuntosClientes(clientes, fecha, mycursor)
     ventas(mycursor, fecha, rango, numfacturas)
     cambiarEstadoArticulos(articulos)
 
-def iniciar(idSucursal):
+
+def hacerReportes(idSucursal):
     mydb, mycursor = getSucursal(idSucursal)
     obtenerCambios(mycursor, mydb, idSucursal)
 
-iniciar(1)
+
+# for i in range(1, 4):
+#     hacerReportes(i)

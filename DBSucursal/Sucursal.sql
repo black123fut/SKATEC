@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS SolicitudPedido(
 CREATE TABLE IF NOT EXISTS ListaSolicitud(
 	IdProducto INTEGER NOT NULL,
     IdSolicitudPedido INTEGER NOT NULL,
+	Cantidad INTEGER NOT NULL,
     FOREIGN KEY(IdProducto) REFERENCES Producto(IdProducto),
     FOREIGN KEY(IdSolicitudPedido) REFERENCES SolicitudPedido(IdSolicitudPedido)
 );

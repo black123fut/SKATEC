@@ -6,6 +6,13 @@ from Dictionaries import *
 from Connections import *
 
 
+def obtenerResultado(stored):
+    lista = []
+    for resultados in stored:
+        lista += resultados.fetchall()
+    return lista
+
+
 def getLargoTablaPG(nombre):
     sqlInsertar = "SELECT Id" + nombre + " FROM " + nombre
     cursor.execute(sqlInsertar)
@@ -38,6 +45,28 @@ def getLargoTablaMySQL(nombre, mycursor):
     return largo
 
 
+def getProveedor(IdProducto):
+    queryPG = 'SELECT IdProveedor FROM Producto WHERE IdProducto=' + str(IdProducto)
+    cursor.execute(queryPG)
+    idproveedor = cursor.fetchall()[0][0]
+
+    queryPG = 'SELECT COUNT(IdProveedor) FROM Producto WHERE IdProveedor=' + str(idproveedor)
+    cursor.execute(queryPG)
+    return idproveedor, cursor.fetchall()[0][0]
+
+
+def complementoLista(lista):
+    lista += [21]
+    nueva = []
+    count = 0
+    for i in range(20):
+        if (i + 1) != lista[count]:
+            nueva += [(i + 1)]
+        else:
+            count += 1
+    return nueva
+
+
 def unpackFecha(articulos):
     res = []
     for x in articulos:
@@ -57,7 +86,11 @@ def GenerarFecha():
     mes = random.randint(1, 12)
     dia = random.randint(1, 30)
     # fecha = anio + "-" + mes + "-" + dia
-    fecha = datetime.datetime(anio, mes, dia)
+    fecha = datetime.datetime(2019, 2, 11)
+    try:
+        fecha = datetime.datetime(anio, mes, dia)
+    except:
+        GenerarFecha()
     return fecha.strftime('%Y-%m-%d')
 
 
@@ -139,7 +172,7 @@ def GenerarDireccion():
 
 
 def obtenerNombre(cedula):
-    with urllib.request.urlopen("https://apis.gometa.org/cedulas/" + str(cedula) + "&key=dfBzyOkvDxZoYoj") as url:
+    with urllib.request.urlopen("https://apis.gometa.org/cedulas/" + str(cedula)) as url:
         data = json.loads(url.read().decode())
         if data['resultcount'] == 0:
             return 1, 1
@@ -184,6 +217,7 @@ def getUsuarioPG(cedula):
     usuario = cursor.fetchone()
     return usuario
 
+
 def GenerarCedula():
     cedula = str(random.randint(1, 7))
     for i in range(8):
@@ -191,10 +225,13 @@ def GenerarCedula():
     cedula = int(cedula)
     return cedula
 
+
 def GenerarNombre():
     ind = random.randint(0, 79)
     return nombres[ind]
 
+
 def GenerarApellido():
-    ind = random.randint(0,98)
+    ind = random.randint(0, 98)
     return apellidos[ind]
+

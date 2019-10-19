@@ -1,14 +1,17 @@
+USE Sucursal2;
+
 DELIMITER //
 CREATE PROCEDURE Venta(idFact INT, idArt INT, prec FLOAT)
 BEGIN
-	INSERT INTO Venta(IdFactura,IdArticulo,Precio) 
+	INSERT INTO Venta(IdFactura,IdArticulo,Precio)
     VALUES (idFact,idArt,prec);
-    
+
     UPDATE Articulo
     SET Estado = 'Vendido'
     WHERE Articulo.IdArticulo = idArt;
 END //
 DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE ObtenerVentas(IN Fecha DATE)
@@ -19,22 +22,24 @@ BEGIN
 END //
 DELIMITER ;
 
+
 DELIMITER //
 CREATE PROCEDURE ActualizarFactura(idFact INT, monto INT, points INT, idClient INT, idEmp INT)
 BEGIN
     UPDATE Factura
     SET MontoTotal = monto, PuntosObtenidos = points
     WHERE Factura.IdFactura = idFact;
-    
+
     UPDATE Cliente
     SET Puntos = Puntos + points
     WHERE Cliente.IdCliente = idClient;
-    
+
     UPDATE Empleado
     SET NumVentas = NumVentas + 1
     WHERE Empleado.IdEmpleado = idEmp;
 END //
 DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE AumentarSalario (IN IdMejorEmpleado INT)
@@ -45,10 +50,11 @@ BEGIN
 END //
 DELIMITER ;
 
+
 DELIMITER //
 CREATE PROCEDURE ObtenerEmpleadoMes (IN Dateanterior DATE, IN Dateactual DATE)
 BEGIN
-    SELECT *, COUNT(E.IdEmpleado) AS Ventas FROM Empleado E
+    SELECT E.*, COUNT(F.IdEmpleado) AS Ventas FROM Empleado E
     INNER JOIN Factura F ON F.IdEmpleado = E.IdEmpleado
     WHERE F.FechaCompra BETWEEN Dateanterior AND Dateactual
     GROUP BY E.IdEmpleado
@@ -57,17 +63,18 @@ BEGIN
 END //
 DELIMITER ;
 
-CALL ObtenerEmpleadoMes('2019-10-01', '2019-11-01')
 
 DELIMITER //
 CREATE PROCEDURE ComprasRealizadas(IN Fecha DATE)
 BEGIN
-    SELECT A.IdArticulo, A.Estado FROM Venta V
+    SELECT A.IdArticulo, A.Estado, P.* FROM Venta V
     INNER JOIN Factura F ON F.IdFactura = V.IdFactura
     INNER JOIN Articulo A ON A.IdArticulo = V.IdArticulo
+    INNER JOIN Producto P on A.IdProducto = P.IdProducto
     WHERE F.FechaCompra = Fecha;
 END //
 DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE PuntosClientes(IN Fecha DATE)
@@ -77,6 +84,7 @@ BEGIN
     WHERE F.FechaCompra = Fecha;
 END //
 DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE ObtenerPuntosGanados(IN IdCli INT, IN Fecha DATE)
@@ -88,16 +96,17 @@ END //
 DELIMITER ;
 
 
--- CALL PuntosClientes('2019-10-13')
-
 DELIMITER //
-CREATE PROCEDURE CantidadArticulos()
+CREATE PROCEDURE CantidadArticulosDisponibles()
 BEGIN
-    SELECT P.Nombre AS NombreProducto, P.IdProducto AS IdProducto, COUNT(A.IdProducto) AS Cantidad FROM Articulo A
+    SELECT P.Nombre AS NombreProducto, P.CategoriaActivo, P.IdProducto AS IdProducto, COUNT(A.IdProducto) AS Cantidad
+    FROM Articulo A
     INNER JOIN Producto P ON P.IdProducto = A.IdProducto
+    WHERE A.Estado = 'Disponible'
     GROUP BY A.IdProducto;
 END //
 DELIMITER ;
+
 
 DELIMITER //
 CREATE PROCEDURE ObtenerFacturas(IN Fecha DATE)

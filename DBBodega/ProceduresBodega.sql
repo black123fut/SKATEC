@@ -97,3 +97,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION CantidadArticulos()
+RETURNS TABLE(IdProd INTEGER, Cantidad BIGINT) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT A.IdProducto, COUNT(A.IdProducto) AS Cantidad FROM Articulo A
+    INNER JOIN Producto P ON P.IdProducto = A.IdProducto
+    WHERE A.estado='embodegado'
+    GROUP BY A.IdProducto
+    ORDER BY A.IdProducto;
+END;
+$$ LANGUAGE plpgsql;
+

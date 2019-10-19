@@ -40,8 +40,7 @@ insertar = {
 }
 
 insertarMySQL = {
-    "Articulo": "INSERT INTO  Articulo(IdArticulo,IdProducto,IdSucursal,CodigoArticulo,Estado,FechaRegistro,"
-                "DetalleDireccion,IdCanton) VALUES ",
+    "Articulo": "INSERT INTO  Articulo(IdArticulo,IdProducto,IdSucursal,CodigoArticulo,Estado,FechaRegistro,DetalleDireccion,IdCanton) VALUES ",
     "PedidoRecibido": "INSERT INTO  PedidoRecibido(IdSolicitudPedido,FechaRecibido) VALUES ",
     "SolicitudPedido": "INSERT INTO  SolicitudPedido(FechaSolicitud) VALUES ",
     "ListaRecibido": insertar["ListaRecibido"],

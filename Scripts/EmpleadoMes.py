@@ -4,6 +4,7 @@ from Utils import *
 def aumentarSalario(idEmpleado, mycursor):
     mycursor.callproc('AumentarSalario', (idEmpleado, ))
 
+
 def agregarEmpleadoATablaMes(empleado, fechaactual, mydb, mycursor):
     idEmpleado = str(empleado[0])
 
@@ -28,7 +29,7 @@ def getEmpleadoMes(mes, anio, mycursor):
     fechaactual = GetFecha(anio, mes, 1)
     fechapasada = GetFecha(aniopasado, mespasado, 1)
 
-    mycursor.callproc('ObtenerEmpleadoMes', [fechapasada, fechaactual])
+    mycursor.callproc('ObtenerEmpleadoMes', (fechapasada, fechaactual))
     empleado = []
     for emp in mycursor.stored_results():
         empleado += emp.fetchall()
@@ -40,8 +41,8 @@ def seleccionarEmpleadoMes(idsucursal, mes, anio):
     mydb, mycursor = getSucursal(idsucursal)
 
     empleado, fechaactual = getEmpleadoMes(mes, anio, mycursor)
-    print(empleado)
     agregarEmpleadoATablaMes(empleado, fechaactual, mydb, mycursor)
 
 
-# seleccionarEmpleadoMes(3, 11, 2019)
+# for i in range(1, 4):
+#     seleccionarEmpleadoMes(i, 11, 2019)
