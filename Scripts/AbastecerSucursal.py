@@ -1,5 +1,5 @@
 from Utils import *
-
+from GeneradorReportes import *
 
 def enviarAlTransporte(idSucursal, fecha, idProd, cantidad):
     totalLista = []
@@ -103,15 +103,20 @@ def pedirArticulosFaltantes(idSucursal):
     mycursor.callproc('CantidadArticulosDisponibles')
     stock = obtenerResultado(mycursor.stored_results())
     idlista = []
+    listaReporte = []
     for i in range(len(stock)):
-        faltantes = 10 - stock[i][3]
+        faltantes = 5 - stock[i][3]
         if faltantes > 0:
-            pedirProductosBodega(stock[i][0], stock[i][1], idSucursal, faltantes, 0)
+            listaReporte += [getIdProductoPG(stock[i][0], stock[i][1])[0][0]]
+            pedirProductosBodega(stock[i][0], stock[i][1], idSucursal, faltantes + 5, 0)
         idlista += [stock[i][2]]
 
     agotados = complementoLista(idlista)
+    listaReporte += agotados
     for i in range(len(agotados)):
         pedirProductosBodega("", "", idSucursal, 10, agotados[i])
+
+    articulosFaltantes(listaReporte, idSucursal)
 
 
 for i in range(1, 4):

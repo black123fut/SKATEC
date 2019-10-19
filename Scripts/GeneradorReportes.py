@@ -80,6 +80,16 @@ def obtenerCambios(mycursor, mydb, idSucursal):
     cambiarEstadoArticulos(articulos)
 
 
+def articulosFaltantes(productos, idsucursal):
+    fecha = time.strftime('%Y-%m-%d')
+    total = []
+    for i in range(len(productos)):
+        total += getIdProductoPGbyId(productos[i])
+
+    crearCSV(fecha, total, "ProductosFaltantes", idsucursal)
+
+
+
 def hacerReportes(idSucursal):
     mydb, mycursor = getSucursal(idSucursal)
     obtenerCambios(mycursor, mydb, idSucursal)

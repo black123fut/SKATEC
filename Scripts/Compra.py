@@ -105,4 +105,4 @@ def GenerarCompras(numCompras):
 
 
 # EfectuarUnaCompra(6, 6, 1, 10, 4)
-GenerarCompras(10)
+GenerarCompras(50)
