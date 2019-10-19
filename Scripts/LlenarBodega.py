@@ -40,6 +40,11 @@ def insertarEnDB(rango, idPed, fecha, offset, cantidad):
 
 
 def abastecerBodega(cantidad):
+    """
+    Llena la bodega con una cantidad de iteracion especifica para meter articulos.
+    :param cantidad:
+    :return:
+    """
     sqlInsertar = "SELECT IdSolicitudPedido FROM SolicitudPedido"
     cursor.execute(sqlInsertar)
     idPed = len(cursor.fetchall()) + 1
@@ -64,6 +69,11 @@ def abastecerBodega(cantidad):
 
 
 def pedirArticulo(idProducto, cantidad):
+    """
+    Se solicita al proveedor una cantidad especifica de uno de sus productos.
+    :param idProducto: Identificacion del procudcto que se va a comprar.
+    :param cantidad: Catidad de articulos que se van comprar.
+    """
     sqlInsertar = "SELECT IdSolicitudPedido FROM SolicitudPedido"
     cursor.execute(sqlInsertar)
     idPed = len(cursor.fetchall()) + 1
@@ -87,6 +97,9 @@ def pedirArticulo(idProducto, cantidad):
 
 
 def llenarArticulosAgotados():
+    """
+    Llena los articulos que estan por agotarse o agotados en la bodega.
+    """
     queryPG = 'SELECT * FROM CantidadArticulos()'
     cursor.execute(queryPG)
     productos = cursor.fetchall()

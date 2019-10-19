@@ -55,6 +55,9 @@ def crearCSV(fecha, lista, nombre, idSucursal):
 
 
 def obtenerCambios(mycursor, mydb, idSucursal):
+    """
+    Crea los CVS y hace los cambios del cierre de caja en la bodega.
+    """
     fecha = time.strftime('%Y-%m-%d')
 
     mycursor.callproc('ComprasRealizadas', (fecha,))

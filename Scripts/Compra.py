@@ -9,8 +9,13 @@ def metodoPago():
         return "Tarjeta"
 
 
-# Crea la factura que funciona como el encabezado de la lista de articulos en la compra efectuada
 def CrearFactura(idCliente, idEmpleado, fecha, fechaVence, metoPago, mydb, mycursor):
+    """
+    Crea la factura que funciona como el encabezado de la lista de articulos en la compra efectuada.
+    :param mydb: Conexion con la base de datos de la sucursal.
+    :param mycursor: cursor para hacer consultas a la base de datos.
+    :return:
+    """
     sentenciaMSQL = insertarMySQL["Factura"] + "(%s,%s,%s,0,0,%s,%s)"
     mycursor.execute(sentenciaMSQL, (str(idEmpleado), str(idCliente), str(fecha), str(fechaVence), str(metoPago)))
     mydb.commit()
@@ -36,6 +41,10 @@ def Venta(idArticulo, idFactura, precio, mydb, mycursor):
 
 # Genera una compra con los datos que se desean
 def EfectuarUnaCompra(idCliente, idEmpleado, idSucursal, cantidad, idProducto):
+    """
+    Compra una cantidad de un producto especifico.
+    :param cantidad: Cantidad de articulos de un producto que se va a comprar.
+    """
     mydb, mycursor = getSucursal(idSucursal)
     fechaIn, fechaFin = GenerarFechaGarantia()
     metodoPag = metodoPago()
@@ -63,6 +72,11 @@ def EfectuarUnaCompra(idCliente, idEmpleado, idSucursal, cantidad, idProducto):
 
 # Genera valores semi-aleatorios para el numero de compras que se quiere registrar
 def GenerarCompras(numCompras):
+    """
+    Hace una cantidad de compras especifica en cada sucursal.
+    :param numCompras: Cantidad de compras que se van a hacer.
+    :return:
+    """
     for i in range(3):
         idSucursal = i + 1
         mydb, mycursor = getSucursal(idSucursal)
