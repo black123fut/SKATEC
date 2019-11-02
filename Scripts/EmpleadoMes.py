@@ -2,18 +2,18 @@ from Utils import *
 
 
 def aumentarSalario(idEmpleado, mycursor):
-    mycursor.callproc('AumentarSalario', (idEmpleado, ))
+    mycursor.callproc('AumentarSalario', (idEmpleado,))
 
 
 def agregarEmpleadoATablaMes(empleado, fechaactual, mydb, mycursor):
     idEmpleado = str(empleado[0])
 
     myInsert = insertarMySQL["EmpleadoMes"] + "(" + idEmpleado + ", %s)"
-    mycursor.execute(myInsert, (fechaactual, ))
+    mycursor.execute(myInsert, (fechaactual,))
     mydb.commit()
 
     sqlInsert = insertar["EmpleadoMes"] + "(" + idEmpleado + ", %s)"
-    cursor.execute(sqlInsert, (fechaactual, ))
+    cursor.execute(sqlInsert, (fechaactual,))
     conexion.commit()
 
     aumentarSalario(empleado[0], mycursor)
@@ -42,7 +42,6 @@ def seleccionarEmpleadoMes(idsucursal, mes, anio):
 
     empleado, fechaactual = getEmpleadoMes(mes, anio, mycursor)
     agregarEmpleadoATablaMes(empleado, fechaactual, mydb, mycursor)
-
 
 # for i in range(1, 4):
 #     seleccionarEmpleadoMes(i, 11, 2019)

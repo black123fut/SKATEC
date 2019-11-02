@@ -116,4 +116,5 @@ def llenarArticulosAgotados():
         pedirArticulo(agotados[i], 100)
 
 
-abastecerBodega(200)
+# abastecerBodega(200)
+llenarArticulosAgotados()

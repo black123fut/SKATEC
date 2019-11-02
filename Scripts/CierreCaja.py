@@ -3,7 +3,6 @@ from AbastecerSucursal import *
 from EmpleadoMes import *
 from LlenarBodega import llenarArticulosAgotados
 
-
 # Genera los reportes de cada sucursal
 for i in range(1, 4):
     hacerReportes(i)

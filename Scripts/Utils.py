@@ -116,7 +116,7 @@ def GetFecha(anio, mes, dia):
 
 
 def GenerarPromocion(idSucursal, idProducto):
-    mycursor, mydb = getSucursal(idSucursal)
+    mydb, mycursor = getSucursal(idSucursal)
     prodRandom = random.randint(1, 20) if idProducto == 0 else idProducto
     descuento = random.randint(10, 70)
     sucursal = getSucursalPG(idSucursal)[0]
@@ -124,9 +124,10 @@ def GenerarPromocion(idSucursal, idProducto):
     fecha = time.strftime('%Y-%m-%d')
     vencimiento = datetime.datetime(2019, random.randint(10, 12), random.randint(1, 30)).strftime('%Y-%m-%d')
 
-    myInsert = insertarMySQL["Promocion"] + "(" + producto[1] + ", " + sucursal[1] + ", %s, %s, " + str(descuento) \
+    myInsert = insertarMySQL["Promocion"] + "(%s, %s, %s, %s, " + str(descuento) \
                + ", " + str(producto[0]) + ")"
-    mycursor.execute(myInsert, (fecha, vencimiento))
+    print(myInsert)
+    mycursor.execute(myInsert, (producto[1], sucursal[1], fecha, vencimiento))
     mydb.commit()
 
 
@@ -234,4 +235,3 @@ def GenerarNombre():
 def GenerarApellido():
     ind = random.randint(0, 98)
     return apellidos[ind]
-

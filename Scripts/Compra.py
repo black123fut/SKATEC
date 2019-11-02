@@ -52,7 +52,7 @@ def EfectuarUnaCompra(idCliente, idEmpleado, idSucursal, cantidad, idProducto):
     monto = 0.0
 
     for idArt in range(cantidad):
-        sentenciaMSQL = "SELECT IdProducto FROM Articulo WHERE IdProducto = %s AND Estado = %s"
+        sentenciaMSQL = "SELECT IdProducto FROM Articulo WHERE IdArticulo = %s AND Estado = %s"
         mycursor.execute(sentenciaMSQL, (str(idProducto), 'Disponible'))
         resultados = mycursor.fetchall()
 
@@ -69,6 +69,9 @@ def EfectuarUnaCompra(idCliente, idEmpleado, idSucursal, cantidad, idProducto):
     puntosGanados = CalcularPuntos(monto)
     ActualizarFactura(idFactura, monto, puntosGanados, idCliente, idEmpleado, mydb, mycursor)
 
+
+
+EfectuarUnaCompra(3, 201, 3, 2, 71)
 
 # Genera valores semi-aleatorios para el numero de compras que se quiere registrar
 def GenerarCompras(numCompras):
@@ -119,4 +122,4 @@ def GenerarCompras(numCompras):
 
 
 # EfectuarUnaCompra(6, 6, 1, 10, 4)
-GenerarCompras(50)
+# GenerarCompras(50)

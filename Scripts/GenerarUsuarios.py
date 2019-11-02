@@ -1,8 +1,8 @@
 from Utils import *
 from psycopg2 import errors
 
-def GenerarUsuario(cedula):
 
+def GenerarUsuario(cedula):
     nombre, apellidos = obtenerNombre(cedula)
 
     if nombre != 1:
@@ -16,8 +16,9 @@ def GenerarUsuario(cedula):
 
         sentenciaPSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         try:
-            cursor.execute(sentenciaPSQL, (str(cedula),str(nombre),str(apellidos),str(fecha),str(telefono),str(email),
-                                           str(direccion),str(fechaNac), str(canton)))
+            cursor.execute(sentenciaPSQL,
+                           (str(cedula), str(nombre), str(apellidos), str(fecha), str(telefono), str(email),
+                            str(direccion), str(fechaNac), str(canton)))
             conexion.commit()
             return fecha
         except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
@@ -39,8 +40,8 @@ def GenerarUsuarioR():
 
     sentenciaPSQL = insertar["Usuario"] + "(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
     try:
-        cursor.execute(sentenciaPSQL, (str(cedula),str(nombre),str(apellido),str(fecha),str(telefono),str(email),
-                                       str(direccion),str(fechaNac), str(canton)))
+        cursor.execute(sentenciaPSQL, (str(cedula), str(nombre), str(apellido), str(fecha), str(telefono), str(email),
+                                       str(direccion), str(fechaNac), str(canton)))
         conexion.commit()
         return cedula, fecha
     except (psycopg2.errors.UniqueViolation, psycopg2.errors.InFailedSqlTransaction):
@@ -54,7 +55,7 @@ def GenerarClientesR(cantidad):
         if fecha == 1:
             print("Usuario ya registrado")
         else:
-            cursor.callproc("RegistrarCliente", (str(cedula),str(fecha),str(fecha)))
+            cursor.callproc("RegistrarCliente", (str(cedula), str(fecha), str(fecha)))
             conexion.commit()
             resultado = cursor.fetchone()
 
@@ -69,11 +70,11 @@ def GenerarClientesR(cantidad):
                 mydb.commit()
 
                 sentenciaMSQL = insertar["Cliente"] + "(%s,%s,0,%s,%s)"
-                mycursor.execute(sentenciaMSQL,(str(idCliente),str(cedula),str(fecha),str(fecha)))
+                mycursor.execute(sentenciaMSQL, (str(idCliente), str(cedula), str(fecha), str(fecha)))
                 mydb.commit()
 
 
-def GenerarVendedoresR(cantidad,idSucursal):
+def GenerarVendedoresR(cantidad, idSucursal):
     for i in range(cantidad):
         cedula, fecha = GenerarUsuarioR()
         if fecha == 1:
@@ -81,14 +82,14 @@ def GenerarVendedoresR(cantidad,idSucursal):
         else:
             codigo = GenerarCodigoEmpleado(idSucursal)
 
-            cursor.callproc("RegistrarEmpleado", (str(cedula), str(codigo), str(fecha),"Vendedor",str(280000.0)))
+            cursor.callproc("RegistrarEmpleado", (str(cedula), str(codigo), str(fecha), "Vendedor", str(280000.0)))
             conexion.commit()
             resultado = cursor.fetchone()
 
             idEmpleado = resultado[0]
 
             sentenciaPSQL = insertar["Vendedor"] + "(%s,%s,0)"
-            cursor.execute(sentenciaPSQL,(str(idEmpleado),str(idSucursal)))
+            cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal)))
             conexion.commit()
 
             usuario = getUsuarioPG(cedula)
@@ -99,12 +100,12 @@ def GenerarVendedoresR(cantidad,idSucursal):
             mydb.commit()
 
             sentenciaMSQL = insertarMySQL["Empleado"] + "(%s,%s,%s,%s,%s,%s,0,%s,%s)"
-            mycursor.execute(sentenciaMSQL, (str(idEmpleado),str(codigo),"Activo",str(idSucursal),"Vendedor",
-                                             str(280000.0),str(cedula),str(fecha)))
+            mycursor.execute(sentenciaMSQL, (str(idEmpleado), str(codigo), "Activo", str(idSucursal), "Vendedor",
+                                             str(280000.0), str(cedula), str(fecha)))
             mydb.commit()
 
 
-def GenerarClientes(cantidad,cedulaIn):
+def GenerarClientes(cantidad, cedulaIn):
     cedula = cedulaIn
     for i in range(cantidad):
         print(cedula)
@@ -114,7 +115,7 @@ def GenerarClientes(cantidad,cedulaIn):
         elif fecha == 2:
             print("Cedula invalida")
         else:
-            cursor.callproc("RegistrarCliente", (str(cedula),str(fecha),str(fecha)))
+            cursor.callproc("RegistrarCliente", (str(cedula), str(fecha), str(fecha)))
             conexion.commit()
             resultado = cursor.fetchone()
 
@@ -129,13 +130,13 @@ def GenerarClientes(cantidad,cedulaIn):
                 mydb.commit()
 
                 sentenciaMSQL = insertar["Cliente"] + "(%s,%s,0,%s,%s)"
-                mycursor.execute(sentenciaMSQL,(str(idCliente),str(cedula),str(fecha),str(fecha)))
+                mycursor.execute(sentenciaMSQL, (str(idCliente), str(cedula), str(fecha), str(fecha)))
                 mydb.commit()
         cedula += 1
 
 
 def GenerarCodigoEmpleado(idSuc):
-    codigo = "SE-"+str(idSuc)+"-"
+    codigo = "SE-" + str(idSuc) + "-"
     for n in range(3):
         for i in range(4):
             codigo = codigo + str(random.randint(0, 9))
@@ -144,7 +145,7 @@ def GenerarCodigoEmpleado(idSuc):
     return codigo
 
 
-def GenerarVendedores(cantidad,idSucursal,cedulaIn):
+def GenerarVendedores(cantidad, idSucursal, cedulaIn):
     cedula = cedulaIn
     for i in range(cantidad):
         fecha = GenerarUsuario(cedula)
@@ -155,14 +156,14 @@ def GenerarVendedores(cantidad,idSucursal,cedulaIn):
         else:
             codigo = GenerarCodigoEmpleado(idSucursal)
 
-            cursor.callproc("RegistrarEmpleado", (str(cedula), str(codigo), str(fecha),"Vendedor",str(280000.0)))
+            cursor.callproc("RegistrarEmpleado", (str(cedula), str(codigo), str(fecha), "Vendedor", str(280000.0)))
             conexion.commit()
             resultado = cursor.fetchone()
 
             idEmpleado = resultado[0]
 
             sentenciaPSQL = insertar["Vendedor"] + "(%s,%s,0)"
-            cursor.execute(sentenciaPSQL,(str(idEmpleado),str(idSucursal)))
+            cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal)))
 
             usuario = getUsuarioPG(cedula)
 
@@ -172,7 +173,7 @@ def GenerarVendedores(cantidad,idSucursal,cedulaIn):
             mydb.commit()
 
             sentenciaMSQL = insertar["Empleado"] + "(%s,%s,\"Activo\",%s,\"Vendedor\",%s,0,%s,%s)"
-            mycursor.execute(sentenciaMSQL, (str(idEmpleado),str(codigo),str(idSucursal),str(280000.0),str(cedula),
+            mycursor.execute(sentenciaMSQL, (str(idEmpleado), str(codigo), str(idSucursal), str(280000.0), str(cedula),
                                              str(fecha)))
             mydb.commit()
         cedula += 1
@@ -259,11 +260,11 @@ def CrearEmpleado(cedula, nombre, apellidos, fechaNac, telefono, email, direccio
 
             if puesto == "Vendedor":
                 sentenciaPSQL = insertar["Vendedor"] + "(%s,%s,0)"
-                cursor.execute(sentenciaPSQL,(str(idEmpleado),str(idSucursal)))
+                cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal)))
                 conexion.commit()
             elif puesto == "Administrador":
                 sentenciaPSQL = insertar["Administrador"] + "(%s,%s,%s,%s)"
-                cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal), str(fecha),str(fechaFin)))
+                cursor.execute(sentenciaPSQL, (str(idEmpleado), str(idSucursal), str(fecha), str(fechaFin)))
                 conexion.commit()
 
             mydb, mycursor = getSucursal(idSucursal)
@@ -315,8 +316,8 @@ def CrearEmpleado(cedula, nombre, apellidos, fechaNac, telefono, email, direccio
 
 def despedirEmpleado(cedula):
     queryPG = 'UPDATE Empleado ' \
-               'SET Estado=%s' \
-               'WHERE Cedula=' + str(cedula)
+              'SET Estado=%s' \
+              'WHERE Cedula=' + str(cedula)
     cursor.execute(queryPG, ('Inactivo',))
     conexion.commit()
 
@@ -325,7 +326,6 @@ def despedirEmpleado(cedula):
         mydb, mycursor = getSucursal(numSucursal)
         mycursor.execute(queryPG, ('Inactivo',))
         mydb.commit()
-
 
 # despedirEmpleado(648125322)
 # GenerarClientesR(4000)

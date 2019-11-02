@@ -1,6 +1,7 @@
 from Utils import *
 from GeneradorReportes import *
 
+
 def enviarAlTransporte(idSucursal, fecha, idProd, cantidad):
     totalLista = []
     sqlInsertar = insertar["Envio"] + "(%s" + ", " + str(idSucursal) + ")"
@@ -8,6 +9,7 @@ def enviarAlTransporte(idSucursal, fecha, idProd, cantidad):
     conexion.commit()
 
     numenvio = getLargoTablaPG("Envio")
+
     for i in range(20):
         rand, prod = (random.randint(1, 5), i + 1) if idProd == 0 else (cantidad, idProd)
         cursor.callproc("AgregarListaEnvio", (numenvio, idSucursal, rand, prod))
@@ -34,6 +36,7 @@ def recibirEnSucursal(fecha, listaCantidades, sucursal, mydb, mycursor, idProd):
 
     cursor.execute("SELECT * FROM ObtenerDireccionSucursal(" + str(sucursal) + ")")
     direccion = cursor.fetchall()
+
     for i in range(20):
         cont = str(i + 1) if idProd == 0 else str(idProd)
 
@@ -45,6 +48,7 @@ def recibirEnSucursal(fecha, listaCantidades, sucursal, mydb, mycursor, idProd):
                    str(len(articulos)) + ")"
         mycursor.execute(myInsert)
         mydb.commit()
+
         for j in range(len(articulos)):
             myInsert = insertarMySQL["Articulo"] + "(" + str(articulos[j][0]) + ", " + str(articulos[j][1]) + ", " + \
                        str(articulos[j][2]) + ", %s, %s, %s, %s, " + str(direccion[0][1]) + ")"
@@ -54,6 +58,7 @@ def recibirEnSucursal(fecha, listaCantidades, sucursal, mydb, mycursor, idProd):
             myInsert = insertarMySQL["ListaRecibido"] + "(" + str(articulos[j][0]) + ", " + str(ultimaSolicitud) + ")"
             mycursor.execute(myInsert)
             mydb.commit()
+
         if idProd != 0:
             break
 
@@ -96,7 +101,7 @@ def pedirProductosBodega(nombreProd, categoria, idSucursal, cantidad, idProd):
 
 def pedirArticulosFaltantes(idSucursal):
     """
-    Llena la una sucursal especifica con los articulos que faltan para que tenga minimo 5 de ese producto
+    Llena la sucursal especifica con los articulos que faltan para que tenga minimo 5 de ese producto
     """
     mydb, mycursor = getSucursal(idSucursal)
 
@@ -104,6 +109,7 @@ def pedirArticulosFaltantes(idSucursal):
     stock = obtenerResultado(mycursor.stored_results())
     idlista = []
     listaReporte = []
+
     for i in range(len(stock)):
         faltantes = 5 - stock[i][3]
         if faltantes > 0:
@@ -113,6 +119,7 @@ def pedirArticulosFaltantes(idSucursal):
 
     agotados = complementoLista(idlista)
     listaReporte += agotados
+
     for i in range(len(agotados)):
         pedirProductosBodega("", "", idSucursal, 10, agotados[i])
 
@@ -121,5 +128,7 @@ def pedirArticulosFaltantes(idSucursal):
 
 for i in range(1, 4):
     pedirArticulosFaltantes(i)
+
+
 # fechaapedido = datetime.datetime(2019, 10, 2).strftime('%Y-%m-%d')
 # llenarSucursales(fechaapedido)

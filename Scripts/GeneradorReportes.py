@@ -34,7 +34,7 @@ def agregarFacturasEnBodega(facturas, idSucursal):
     ids = cursor.fetchall()
 
     for i in range(len(facturas)):
-        insertPG = insertar["Factura"] + "(" + str(facturas[i][2]) + ", " + str(idSucursal) + ", " + str(facturas[i][4])\
+        insertPG = insertar["Factura"] + "(" + str(facturas[i][2]) + ", " + str(idSucursal) + ", " + str(facturas[i][4]) \
                    + ", " + str(facturas[i][3]) + ", %s, " + str(facturas[i][7]) + ", %s, %s)"
         cursor.execute(insertPG, (facturas[i][5], facturas[i][8], facturas[i][9]))
         conexion.commit()
@@ -88,9 +88,9 @@ def articulosFaltantes(productos, idsucursal):
     total = []
     for i in range(len(productos)):
         total += getIdProductoPGbyId(productos[i])
+        print(getIdProductoPGbyId(productos[i]))
 
     crearCSV(fecha, total, "ProductosFaltantes", idsucursal)
-
 
 
 def hacerReportes(idSucursal):
@@ -98,5 +98,5 @@ def hacerReportes(idSucursal):
     obtenerCambios(mycursor, mydb, idSucursal)
 
 
-# for i in range(1, 4):
-#     hacerReportes(i)
+for i in range(1, 4):
+    hacerReportes(i)
